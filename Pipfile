@@ -1,0 +1,14 @@
+[[source]]
+name = "pypi"
+url = "http://mirrors.aliyun.com/pypi/simple/"
+verify_ssl = false
+
+[dev-packages]
+
+[packages]
+pyqt5 = "*"
+qdarkstyle = "*"
+pyqtwebengine = "*"
+
+[requires]
+python_version = "3.6"
