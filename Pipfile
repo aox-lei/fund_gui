@@ -10,6 +10,7 @@ pyqt5 = "*"
 qdarkstyle = "*"
 pyqtwebengine = "*"
 akshare = "*"
+tinydb = "*"
 
 [requires]
 python_version = "3.7"
