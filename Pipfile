@@ -6,11 +6,10 @@ verify_ssl = false
 [dev-packages]
 
 [packages]
-pyqt5 = "*"
 qdarkstyle = "*"
-pyqtwebengine = "*"
 akshare = "*"
-tinydb = "*"
+pyside2 = "*"
+peewee = "*"
 
 [requires]
 python_version = "3.7"

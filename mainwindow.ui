@@ -92,64 +92,16 @@
        </layout>
       </item>
       <item>
-       <widget class="QTableWidget" name="table_fund">
-        <attribute name="horizontalHeaderCascadingSectionResizes">
-         <bool>false</bool>
-        </attribute>
-        <attribute name="horizontalHeaderStretchLastSection">
+       <widget class="QTableView" name="table_fund">
+        <attribute name="horizontalHeaderHighlightSections">
          <bool>false</bool>
         </attribute>
         <attribute name="verticalHeaderCascadingSectionResizes">
          <bool>false</bool>
         </attribute>
-        <attribute name="verticalHeaderStretchLastSection">
+        <attribute name="verticalHeaderHighlightSections">
          <bool>false</bool>
         </attribute>
-        <column>
-         <property name="text">
-          <string>基金代码</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>基金名称</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>基金类型</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>昨日净值</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>估算净值</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>估算增长率</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>持仓成本价</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>持仓金额</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>预估收益</string>
-         </property>
-        </column>
        </widget>
       </item>
       <item>
