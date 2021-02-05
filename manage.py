@@ -36,6 +36,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.line_search.textChanged.connect(self.init_search)
         self.init_db()
+
         self.flush_assess_timer()
 
     def init_db(self):
@@ -48,6 +49,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.table_fund.setModel(self.model)
         self.table_fund.setColumnHidden(0, True)
+        self.update_label()
 
     def init_search(self, value=''):
         if value == '':
@@ -92,12 +94,54 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.flush_assess_thread.start()
 
     def update_assess(self, data):
+        if self.table_fund.state() == QAbstractItemView.State.EditingState:
+            return True
         match = self.model.match(self.model.index(
             0, 1), Qt.DisplayRole, data.get('code'))
         if match:
+            row_index = match[0].row()
+            row_record = self.model.record(row_index)
+            hold_cost = row_record.value('hold_cost')
+            hold_money = row_record.value('hold_money')
+
             for k, v in data.items():
                 self.model.setData(self.model.index(
-                    match[0].row(), self.model.fieldIndex(k)), v)
+                    row_index, self.model.fieldIndex(k)), v)
+
+            if hold_cost and hold_money:
+                share = float(format(hold_money / hold_cost, '0.2f'))
+                profit = float(format(
+                    share * (float(data.get('assess_unit_value')) - float(data.get('yesterday_unit_value'))), '0.2f'))
+                self.model.setData(self.model.index(
+                    row_index, self.model.fieldIndex('assess_profit')), profit)
+        self.update_label()
+
+    def update_label(self):
+        q = QSqlQuery(
+            'SELECT sum(hold_money) as total_money, sum(assess_profit) as profit FROM fund')
+        q.first()
+        total_money = q.value('total_money')
+        if total_money is None:
+            total_money = 0
+        profit_value = q.value('profit')
+        if profit_value is None:
+            profit_value = 0
+        total_money = float(format(total_money, '0.2f'))
+        profit_value = float(format(profit_value, '0.2f'))
+        self.label_total_money.setText(
+            '持仓总金额:<b style="color:red">{}</b>元'.format(total_money))
+
+        hour = datetime.now().hour
+        if hour < 9:
+            date = datetime.now().strftime('%Y-%m-%d')
+        else:
+            date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+        if profit_value > 0:
+            self.label_assess.setText(
+                '{}估算收益为<b style="color:red">{}</b>元, 恭喜老板吃肉!!'.format(date, profit_value))
+        else:
+            self.label_assess.setText(
+                '{}估算收益为<b style="color:red">{}</b>元, 不要灰心, 继续补仓!'.format(date, profit_value))
 
     def resetUi(self):
         pass
@@ -207,16 +251,6 @@ class FlushAssessThread(QThread):
 
             row = _df.iloc[-1]
             row_data = row.to_dict()
-
-            hold_cost = float(v.get('hold_cost'))
-            hold_money = float(v.get('hold_money'))
-
-            if hold_cost and hold_money:
-                share = float(format(hold_money / hold_cost, '0.2f'))
-                profit = float(format(
-                    share * (float(row_data['assess_unit_value']) - float(row_data['yesterday_unit_value'])), '0.2f'))
-                row_data['assess_profit'] = profit
-
             self.line_data.emit(row_data)
 
 
