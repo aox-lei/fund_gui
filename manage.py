@@ -114,6 +114,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     share * (float(data.get('assess_unit_value')) - float(data.get('yesterday_unit_value'))), '0.2f'))
                 self.model.setData(self.model.index(
                     row_index, self.model.fieldIndex('assess_profit')), profit)
+            else:
+                self.model.setData(self.model.index(
+                    row_index, self.model.fieldIndex('assess_profit')), 0)
         self.update_label()
 
     def update_label(self):
