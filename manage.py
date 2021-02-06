@@ -3,25 +3,33 @@ import json
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
+
 import akshare as ak
 import qdarkstyle
-from PySide2.QtCore import Qt, QThread, Signal, QTimer
-from PySide2.QtWidgets import (QApplication, QCompleter, QHeaderView,
-                               QMainWindow, QAbstractItemView, QItemDelegate)
-from PySide2.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel, QSqlQuery
+from PySide2.QtCore import Qt, QThread, QTimer, Signal, QUrl
+from PySide2.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
+from PySide2.QtWidgets import (QAbstractItemView, QApplication, QCompleter,
+                               QDoubleSpinBox, QHeaderView, QItemDelegate,
+                               QMainWindow)
 
 from main_window import Ui_MainWindow
-
+from web_browser import WebBrowser, openWithWebBrowser
 ROOT_PATH = Path.cwd()
 DATA_PATH = ROOT_PATH.joinpath('data.txt')
 DB_PATH = ROOT_PATH.joinpath('database.db').as_posix()
 
 
 class EmptyDelegate(QItemDelegate):
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super(EmptyDelegate, self).__init__(parent)
 
-    def createEditor(self, QWidget, QStyleOptionViewItem, QModelIndex):
+    def createEditor(self, parent, option, index):
+        if index.column() in [7, 8]:
+            q = QDoubleSpinBox(option.widget)
+            q.setDecimals(4)
+            q.setRange(0, 10000000)
+            q.setValue(float(index.data()))
+            return q
         return None
 
 
@@ -32,12 +40,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
+        self.btn_login_ttjj.clicked.connect(self.open_web_browser)
         self.resetUi()
 
         self.line_search.textChanged.connect(self.init_search)
         self.init_db()
-
         self.flush_assess_timer()
+
+    def open_web_browser(self):
+        self.browser_view = WebBrowser()
+        self.browser_view.load(QUrl(
+            'https://login.1234567.com.cn/?direct_url=https%3a%2f%2ftrade.1234567.com.cn%2fMyAssets%2fDefault'))
+        self.browser_view.show()
+        # cookie = self.browser_view.get_cookies()
+        self.browser_view.close_browser.connect(self.get_cookie)
+    
+    def get_cookie(self, cookies):
+        print(cookies)
+
 
     def init_db(self):
         self.db = QSqlDatabase.addDatabase('QSQLITE')
@@ -161,7 +181,7 @@ class FundQSqlTableModel(QSqlTableModel):
         self.setEditStrategy(QSqlTableModel.OnFieldChange)
         for index, column in enumerate(self.header_data):
             self.setHeaderData(index, Qt.Horizontal, column)
-        for i in [0, 1, 2, 3, 4, 5, 6, 9]:
+        for i in range(0, len(self.header_data) + 1):
             self.table_view.setItemDelegateForColumn(
                 i, EmptyDelegate(self))
 

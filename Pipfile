@@ -8,8 +8,9 @@ verify_ssl = false
 [packages]
 qdarkstyle = "*"
 akshare = "*"
-pyside2 = "*"
 peewee = "*"
+pyside2 = "==5.14.2.3"
+requests = "*"
 
 [requires]
 python_version = "3.7"
