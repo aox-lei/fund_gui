@@ -1,26 +1,42 @@
-# -*- coding:utf-8 -*-
-# %%
-import akshare as ak
-from datetime import datetime, timedelta
-import pandas as pd
-df = ak.fund_em_value_estimation()
-df[df['基金代码'] == '000083']
-# %%
-t = {'cp_token': 'daa2fdba75f747e192fb1741d90adb53', 'st_inirUrl': '', 'st_pvi': '08446224274759', 'st_sp': '2021-02-05%2020%3A01%3A15', 'ASP.NET_SessionId': 'b1nd3fipdr330pt1twiy3zwc', 'TradeLoginToken': '4f9e75e209c840cba516f1074a9ebb0e', 'st_si': '18642518925258', 'st_sn': '2', 'st_psi': '20210205214414987-119085303933-8280858184', 'st_asi': 'delete', 'fund_login_qrid': '9e259abb499d421cae2d390ff4781af2', 'fund_trade_cn': 'AIV5WUAzzeBQ9ZCSNpu0oA/hhbCBIWB7UTCGQc4DwNbkyKhmLiscP3zqadDLBBvGr0ccB7C2L3LBWTuqXNbgMZoEDQLkiq4X9mi4AiLz/DrNH9pKqjs=', 'fund_trade_name':
-     'AurZUw0hDCsmZdZPtpIcsgQySOPb90x9SQfKaZBqT26vtC1y6p0MVjMHRR8ykoUiJqufjBq1', 'fund_trade_visitor': 'AIK4E9nrYC6p5cl1KVI5+xXcSgAbofHZSCCGaY2EPg9tqC/4D5dKzAM1fj6N1ldi9Q05AvmE', 'fund_trade_risk': 'AgTFebI5tCWtcBpJkLIe3XIaKDobWPDpVNgHa87Z72b4MCl/whZhkvMZbZfvzXjiKZYM1b/o', 'fund_trade_gps': '7', 'VipLevel': '2', 'UTOKEN': 'AIV5WUAzzeBQ9ZCSNpu0oA/hhbCBIWB7UTCGQc4DwNbkyKhmLiscP3zqadDLBBvGr0ccBVCCuYysnMYX+KLJMxtakZvaEgRelPiZe+z9c97xiZDXwto=', 'LToken': '11f33a5e262543fead110d8bf6af37d4', 'fund_trade_trackid': 'YA1Wv68Xp4vD6Pm2mVEtvufMjXWCPvaq+zJXBEUa4IifXjv9re1GeGhSOkSNuc5LiWwa8dZapvjvyFVmwGqh5A=='}
-s = ''
-for k, v in t.items():
-    s += '{}={};'.format(k, v)
-s
-# %%
-import decimal
-decimal.getcontext().rounding = 'ROUND_HALF_UP'
-a = decimal.Decimal(1.24).quantize(decimal.Decimal('0.0'))
-
-a
-# %%
 import util
-data = util.get_fund_assess(['161725'])
-data
+from requests_html import HTML
+import pandas as pd
+cookie = 'cp_token=3154d5661c4b4f9e8aaea52d57002d21;st_inirUrl=;st_pvi=08446224274759;st_sp=2021-02-05%2020%3A01%3A15;ASP.NET_SessionId=3ucqsjk23parfraesbg0kpas;TradeLoginToken=d3930135ba6e4feda3c3b7629abfed65;st_si=64191009206197;st_sn=1;st_psi=20210206161039925-119085303933-6931175434;st_asi=delete;fund_login_qrid=a8b45e337c6f49f48ec6cf589b874be4;fund_trade_cn=jVT2EQcR5Q3pfQEnFrsH/IPUF6h+CajbXU2VHFYd/99GGum/H2xYnn/4PN2ZXT2xMNK2TzrhCRW9umw7+b5o3PytuH8KbcFlUYz3ihHwCis/qiM533Q=;fund_trade_name=j5WVgafTAEmGFlykZTCjB4TY7B/98osnbEMLPLIecsaOfr7JZxPE+X3b6osqeq2zYpIP8VU0;fund_trade_visitor=jGSRR3Qo0EmQAHlfMGCqmtFWJbb9BgC/T9QqPM8cmiwSXrf8xXBE+J3K4lBDVpOzPrkWJD4V;fund_trade_risk=j1gcTsxAxE1OjuamAdCf6oIRaI29+lDUrVgvPGmqB0FaKrMW9ksFWf3+It3aA5PzxISQfMgb;fund_trade_gps=7;VipLevel=2;UTOKEN=jVT2EQcR5Q3pfQEnFrsH/IPUF6h+CajbXU2VHFYd/99GGum/H2xYnn/4PN2ZXT2xMNK2TGrLJfKd7R22+NRj3/cJ2baLQTRYAlzGJK5HXOVTtJXUlbY=;LToken=b959bdd188e6480784fd33e40edc6a9a;fund_trade_trackid=pgyyc5JXuc5iwocNQmsTbQfdK2+i0wfGvOeppZBCtgsq+aZNUPG8F1vlE+ibtbjjg7iwLOdj3CtpdpNvwINDHQ==;'
+response = util.get_hold_fund(cookie)
+# data = response.json()
+# import json
+# data = json.loads(data.get('d'))
+# data = '<table>{}</table>'.format(data.get('content'))
+# html = HTML(html=data)
+# fund_name = html.find('tr > td > p.f16 > a.lk')
+# fund_name = [info.text for info in fund_name]
+# fund_type = html.find('tr > td.tol.first > p.f12 > span.info-nopl')
+# fund_type = [info.text for info in fund_type]
+# new_unit_value = html.find('tr > td.tol.first > p.f12 > span:nth-child(2)')
+# new_unit_value = [info.text for info in new_unit_value]
+# for index, info in enumerate(new_unit_value):
+#     _info = info.replace('最新净值：', '')
+#     _info = _info.split('（')
+#     new_unit_value[index] = _info[0]
 
-# %%
+# hold_money = html.find('tr > td.tor.f16.desc')
+# hold_money = [info.text for info in hold_money]
+# for index, info in enumerate(hold_money):
+#     _info = info.split('\n')
+#     hold_money[index] = _info[0].replace(',', '')
+
+# data = []
+# for index, info in enumerate(fund_name):
+#     _info = info.split('（')
+#     if fund_type[index] in ['高端理财']:
+#         continue
+
+#     data.append({
+#         'name': _info[0],
+#         'code': _info[1].strip('）'),
+#         'fund_type': fund_type[index],
+#         'yesterday_unit_value': float(new_unit_value[index]),
+#         'hold_money': float(hold_money[index]),
+#         'hold_cost': util.format_float(float(hold_money[index]) / float(new_unit_value[index]))
+#     })
+print(response)

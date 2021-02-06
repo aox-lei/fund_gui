@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import decimal
+
 import json
 import sys
 from datetime import datetime, timedelta
@@ -15,18 +15,11 @@ from PySide2.QtWidgets import (QAbstractItemView, QApplication, QCompleter,
 
 from main_window import Ui_MainWindow
 from web_browser import WebBrowser, openWithWebBrowser
-from util import get_fund_assess
+from util import get_fund_assess, check_login, format_float, get_hold_fund
 ROOT_PATH = Path.cwd()
 DATA_PATH = ROOT_PATH.joinpath('data.txt')
 DB_PATH = ROOT_PATH.joinpath('database.db').as_posix()
-
-decimal.getcontext().rounding = 'ROUND_HALF_UP'
-
-
-def format_float(value, format='0.0000'):
-    if not value:
-        return 0
-    return float(decimal.Decimal(value).quantize(decimal.Decimal(format)))
+COOKIE_PATH = ROOT_PATH.joinpath('cookie')
 
 
 class EmptyDelegate(QItemDelegate):
@@ -54,7 +47,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.resetUi()
 
         self.line_search.textChanged.connect(self.init_search)
+        self.btn_sync.clicked.connect(self.get_hold_fund)
         self.init_db()
+        self.check_login()
         self.flush_assess_timer()
 
     def open_web_browser(self):
@@ -66,7 +61,37 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.browser_view.close_browser.connect(self.get_cookie)
 
     def get_cookie(self, cookies):
-        print(cookies)
+        if not cookies:
+            return True
+        cookie = ''
+        for k, v in cookies.items():
+            cookie += '{}={};'.format(k, v)
+        with open(COOKIE_PATH, 'w') as f:
+            f.write(cookie)
+
+    def check_login(self):
+        if not COOKIE_PATH.exists():
+            return True
+        with open(COOKIE_PATH, 'r') as f:
+            cookies = f.read()
+        result = check_login(cookies)
+        if result:
+            self.btn_login_ttjj.setText('登录成功')
+            self.btn_login_ttjj.setEnabled(False)
+
+    def get_hold_fund(self):
+        if not COOKIE_PATH.exists():
+            return True
+        with open(COOKIE_PATH, 'r') as f:
+            cookies = f.read()
+        result = check_login(cookies)
+        if not result:
+            #TODO: 提示错误
+            pass
+        fund_data = get_hold_fund(cookies)
+        if fund_data:
+            for info in fund_data:
+                self.model.flush_table(info)
 
     def init_db(self):
         self.db = QSqlDatabase.addDatabase('QSQLITE')
@@ -137,7 +162,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.model.setData(self.model.index(
                     row_index, self.model.fieldIndex(k)), v)
 
-            if hold_cost and hold_money:
+            if hold_cost and hold_money and data.get('assess_unit_value') and data.get('yesterday_unit_value'):
                 share = format_float(hold_money / hold_cost)
                 profit = format_float(
                     share * (float(data.get('assess_unit_value')) - float(data.get('yesterday_unit_value'))))
