@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+import decimal
 import json
 import sys
 from datetime import datetime, timedelta
@@ -6,7 +7,7 @@ from pathlib import Path
 
 import akshare as ak
 import qdarkstyle
-from PySide2.QtCore import Qt, QThread, QTimer, Signal, QUrl
+from PySide2.QtCore import Qt, QThread, QTimer, QUrl, Signal
 from PySide2.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
 from PySide2.QtWidgets import (QAbstractItemView, QApplication, QCompleter,
                                QDoubleSpinBox, QHeaderView, QItemDelegate,
@@ -14,9 +15,18 @@ from PySide2.QtWidgets import (QAbstractItemView, QApplication, QCompleter,
 
 from main_window import Ui_MainWindow
 from web_browser import WebBrowser, openWithWebBrowser
+from util import get_fund_assess
 ROOT_PATH = Path.cwd()
 DATA_PATH = ROOT_PATH.joinpath('data.txt')
 DB_PATH = ROOT_PATH.joinpath('database.db').as_posix()
+
+decimal.getcontext().rounding = 'ROUND_HALF_UP'
+
+
+def format_float(value, format='0.0000'):
+    if not value:
+        return 0
+    return float(decimal.Decimal(value).quantize(decimal.Decimal(format)))
 
 
 class EmptyDelegate(QItemDelegate):
@@ -52,12 +62,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.browser_view.load(QUrl(
             'https://login.1234567.com.cn/?direct_url=https%3a%2f%2ftrade.1234567.com.cn%2fMyAssets%2fDefault'))
         self.browser_view.show()
-        # cookie = self.browser_view.get_cookies()
+
         self.browser_view.close_browser.connect(self.get_cookie)
-    
+
     def get_cookie(self, cookies):
         print(cookies)
-
 
     def init_db(self):
         self.db = QSqlDatabase.addDatabase('QSQLITE')
@@ -129,9 +138,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     row_index, self.model.fieldIndex(k)), v)
 
             if hold_cost and hold_money:
-                share = float(format(hold_money / hold_cost, '0.2f'))
-                profit = float(format(
-                    share * (float(data.get('assess_unit_value')) - float(data.get('yesterday_unit_value'))), '0.2f'))
+                share = format_float(hold_money / hold_cost)
+                profit = format_float(
+                    share * (float(data.get('assess_unit_value')) - float(data.get('yesterday_unit_value'))))
                 self.model.setData(self.model.index(
                     row_index, self.model.fieldIndex('assess_profit')), profit)
             else:
@@ -149,8 +158,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         profit_value = q.value('profit')
         if profit_value is None:
             profit_value = 0
-        total_money = float(format(total_money, '0.2f'))
-        profit_value = float(format(profit_value, '0.2f'))
+        total_money = format_float(total_money)
+        profit_value = format_float(profit_value)
         self.label_total_money.setText(
             '持仓总金额:<b style="color:red">{}</b>元'.format(total_money))
 
@@ -159,6 +168,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             date = datetime.now().strftime('%Y-%m-%d')
         else:
             date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+
         if profit_value > 0:
             self.label_assess.setText(
                 '{}估算收益为<b style="color:red">{}</b>元, 恭喜老板吃肉!!'.format(date, profit_value))
@@ -234,7 +244,7 @@ class FlushAssessThread(QThread):
     def run(self):
         fund_list = {}
         model = self.parent.model
-        for index in range(0, model.rowCount() + 1):
+        for index in range(0, model.rowCount()):
             _hold_cost = model.record(index).value('hold_cost')
             _hold_money = model.record(index).value('hold_money')
             if not _hold_cost:
@@ -245,36 +255,18 @@ class FlushAssessThread(QThread):
                 'hold_cost': float(_hold_cost),
                 'hold_money': float(_hold_money)
             }
+
         if not fund_list:
             return True
         fund_codes = list(fund_list.keys())
-        df = ak.fund_em_value_estimation()
-        df = df[df['基金代码'].isin(fund_codes)]
-        now = datetime.now().strftime('%Y-%m-%d')
-        yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
-        before_yesterday = (
-            datetime.now() - timedelta(days=2)).strftime('%Y-%m-%d')
-        columns = {
-            '基金代码': 'code',
-            now + '-估算值': 'assess_unit_value',
-            now + '-估算增长率': 'assess_enhance_rate',
-            yesterday + '-单位净值': 'yesterday_unit_value',
-            yesterday + '-估算值': 'assess_unit_value',
-            yesterday + '-估算增长率': 'assess_enhance_rate',
-            before_yesterday + '-单位净值': 'yesterday_unit_value'
-        }
-        df.rename(columns=columns, inplace=True)
-
-        df = df[['code', 'assess_unit_value',
-                 'assess_enhance_rate', 'yesterday_unit_value']]
-        for k, v in fund_list.items():
-            _df = df[df['code'] == k]
-            if len(_df) == 0:
-                continue
-
-            row = _df.iloc[-1]
-            row_data = row.to_dict()
-            self.line_data.emit(row_data)
+        if not fund_codes:
+            return True
+        for i in range(0, len(fund_codes), 30):
+            fund_code = fund_codes[i:i + 30]
+            assess_data = get_fund_assess(fund_code)
+            if assess_data:
+                for v in assess_data:
+                    self.line_data.emit(v)
 
 
 if __name__ == "__main__":
