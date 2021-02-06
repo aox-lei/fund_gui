@@ -89,6 +89,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             #TODO: 提示错误
             pass
         fund_data = get_hold_fund(cookies)
+
         if fund_data:
             for info in fund_data:
                 self.model.flush_table(info)

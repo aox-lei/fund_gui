@@ -134,7 +134,7 @@ def get_hold_fund(cookie):
         data.append({
             'name': _info[0],
             'code': _info[1].strip('）'),
-            'fund_type': fund_type[index],
+            'type': fund_type[index],
             'yesterday_unit_value': float(new_unit_value[index]),
             'hold_money': float(hold_money[index]),
             'hold_cost': format_float(float(hold_money[index]) / float(new_unit_value[index]))
