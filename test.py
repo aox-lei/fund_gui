@@ -1,4 +1,3 @@
-# %%
-from util import get_fund_assess
-get_fund_assess(['001691'])
-# %%
+import util
+
+util.get_fund_unit_value('161725', '2021-02-05')

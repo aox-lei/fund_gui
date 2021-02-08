@@ -12,6 +12,7 @@ peewee = "*"
 pyside2 = "==5.14.2.3"
 requests = "*"
 requests-html = "*"
+requests-futures = "*"
 
 [requires]
 python_version = "3.7"

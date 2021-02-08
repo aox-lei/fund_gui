@@ -1,15 +1,26 @@
 # -*- coding:utf-8 -*-
-import requests
-import uuid
-import json
-from requests_html import HTML
-import time
 import decimal
+import json
+import time
+import uuid
 
+import akshare as ak
+import requests
+from requests_html import HTML
+from datetime import datetime
 decimal.getcontext().rounding = 'ROUND_HALF_UP'
 
 
 def format_float(value, format='0.0000'):
+    """格式化数字为货币
+
+    Args:
+        value ([type]): [description]
+        format (str, optional): [description]. Defaults to '0.0000'.
+
+    Returns:
+        [type]: [description]
+    """
     if not value:
         return 0
     return float(decimal.Decimal(value).quantize(decimal.Decimal(format)))
@@ -19,7 +30,41 @@ def get_uuid():
     return str(uuid.uuid1()).upper()
 
 
+class FundApi(object):
+    @classmethod
+    def get_fund_unit_value(cls, session, fund_code, date):
+        callback = 'jQuery18308278677581753466_1612762668109'
+        url = 'http://api.fund.eastmoney.com/f10/lsjz?callback={callback}&fundCode={fund_code}&pageIndex=1&pageSize=20&startDate={date}&endDate={date}&_={timestamp}'.format(
+            callback=callback, fund_code=fund_code, date=date, timestamp=int(time.time()))
+
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36',
+            'Accept': '*/*',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+            'Referer': 'http://fundf10.eastmoney.com/',
+        }
+        response = session.get(url, headers=headers)
+        return response
+
+    @classmethod
+    def parse_fund_unit_value(cls, response, callback):
+        data = response.text
+        data = data.replace(callback + '(', '').strip(')')
+        data = json.loads(data)
+        if data.get('ErrCode') != 0:
+            return False
+        data = data.get('')
+
+
 def get_fund_assess(fund_codes):
+    """获取基金预估数据
+
+    Args:
+        fund_codes ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     url = 'https://fundmobapi.eastmoney.com/FundMNewApi/FundMNFInfo'
     headers = {
         'Accept': '*/*',
