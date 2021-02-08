@@ -41,6 +41,7 @@ def get_fund_assess(fund_codes):
     }
     response = requests.post(url, headers=headers, data=post_data)
     data = response.json()
+    print(data)
     if data.get('Success') == True:
         data = data.get('Datas')
     else:
@@ -56,12 +57,12 @@ def get_fund_assess(fund_codes):
             assess_enhance_rate = float(v.get('GSZZL'))
         except Exception as e:
             assess_enhance_rate = 0
-        
+
         fund_data.append({
             'code': v.get('FCODE'),
             'assess_unit_value': assess_unit_value,
             'assess_enhance_rate': assess_enhance_rate,
-            'yesterday_unit_value': v.get('NAV')
+            'yesterday_unit_value': v.get('NAV'),
         })
     return fund_data
 

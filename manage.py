@@ -50,7 +50,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btn_sync.clicked.connect(self.get_hold_fund)
         self.init_db()
         self.check_login()
-        self.flush_assess_timer()
+        # self.flush_assess_timer()
 
     def open_web_browser(self):
         self.browser_view = WebBrowser()
