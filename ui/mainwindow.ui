@@ -70,7 +70,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="line_search">
+         <widget class="SearchLineEdit" name="line_search">
           <property name="placeholderText">
            <string>基金代码, 名称</string>
           </property>
@@ -143,6 +143,13 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SearchLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>searchlineedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
