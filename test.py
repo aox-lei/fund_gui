@@ -1,3 +1,5 @@
-import util
-
-util.get_fund_unit_value('161725', '2021-02-05')
+from view.myfund_qsql_table_model import MyFundQSqlTableModel
+# l = MyFundQSqlTableModel.__dict__.keys()
+# for v in l:
+#     print(type(getattr(MyFundQSqlTableModel, v)))
+print(MyFundQSqlTableModel().columns())

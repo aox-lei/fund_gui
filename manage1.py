@@ -22,20 +22,6 @@ DB_PATH = ROOT_PATH.joinpath('database.db').as_posix()
 COOKIE_PATH = ROOT_PATH.joinpath('cookie')
 
 
-class EmptyDelegate(QItemDelegate):
-    def __init__(self, parent=None):
-        super(EmptyDelegate, self).__init__(parent)
-
-    def createEditor(self, parent, option, index):
-        if index.column() in [7, 8]:
-            q = QDoubleSpinBox(option.widget)
-            q.setDecimals(4)
-            q.setRange(0, 10000000)
-            q.setValue(float(index.data()))
-            return q
-        return None
-
-
 class MainWindow(QMainWindow, Ui_MainWindow):
     search_completer = None
     # 表格列和索引对应关系, 顺序不能改

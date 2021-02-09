@@ -15,7 +15,8 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
     QPixmap, QRadialGradient)
 from PySide2.QtWidgets import *
 
-from searchlineedit import SearchLineEdit
+from .search_line_edit import SearchLineEdit
+from .myfund_table_view import MyFundTableView
 
 
 class Ui_MainWindow(object):
@@ -59,7 +60,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
-        self.table_fund = QTableView(self.centralwidget)
+        self.table_fund = MyFundTableView(self.centralwidget)
         self.table_fund.setObjectName(u"table_fund")
         self.table_fund.horizontalHeader().setHighlightSections(False)
         self.table_fund.verticalHeader().setCascadingSectionResizes(False)
