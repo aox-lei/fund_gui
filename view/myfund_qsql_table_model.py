@@ -1,6 +1,7 @@
 from PySide2.QtCore import Qt
 from PySide2.QtSql import QSqlQuery, QSqlTableModel
 from PySide2.QtWidgets import QItemDelegate, QDoubleSpinBox
+from utils.util import Formula
 
 
 class DontEditDelegate(QItemDelegate):
@@ -55,13 +56,15 @@ class MyFundQSqlTableModel(QSqlTableModel):
                            FloatEditDelegate], default_value=0)
     hold_money = TableField('hold_money', '持仓总金额',
                             delegate=[FloatEditDelegate], default_value=0)
-    assress_profit = TableField(
-        'assress_profit', '预估收益', delegate=[DontEditDelegate], default_value=0)
+    hold_share = TableField('hold_share', '持仓份额', delegate=[
+                            DontEditDelegate], default_value=0)
+    assess_profit = TableField(
+        'assess_profit', '预估收益', delegate=[DontEditDelegate], default_value=0)
 
     def __init__(self, parent=None, db=None):
         super(MyFundQSqlTableModel, self).__init__(parent, db)
         self.setTable('my_fund')
-
+        self.setEditStrategy(self.OnFieldChange)
         for index, column in enumerate(self.columns()):
             self.setHeaderData(index, Qt.Horizontal, column.column_name)
             for _delegate in column.delegate:
@@ -101,7 +104,32 @@ class MyFundQSqlTableModel(QSqlTableModel):
             return True
         return False
 
-    def findCode(self, fund_code):
+    def update_row(self, data):
+        match = self.find_code_index(data.get('code'))
+        if not match:
+            return False
+
+        record = self.find_by_code(data.get('code'))
+        for k, v in data.items():
+            record.setValue(k, v)
+
+        # 更新持仓金额
+        if record.value('hold_share') and record.value('unit_value'):
+            record.setValue('hold_money', Formula.hold_money(
+                record.value('unit_value'), record.value('hold_share')))
+
+        # 更新预估收益
+        if record.value('assess_unit_value') and data.get('prev_unit_value') and record.value('hold_share'):
+            record.setValue('assess_profit', Formula.profit(record.value(
+                'assess_unit_value'), data.get('prev_unit_value'), record.value('hold_share')))
+
+        for column in self.columns():
+            if record.value(column.field_name):
+                self.setData(self.index(match.row(), self.fieldIndex(
+                    column.field_name)), record.value(column.field_name))
+        # self.submit()
+
+    def find_code_index(self, fund_code):
         """查找基金代码
 
         Args:
@@ -110,10 +138,29 @@ class MyFundQSqlTableModel(QSqlTableModel):
         Returns:
             [type]: [description]
         """
-        math = self.math(self.index(0, 1), Qt.DisplayRole, fund_code)
-        if math:
-            return math[0]
+        match = self.match(self.index(0, 1), Qt.DisplayRole, fund_code)
+        if match:
+            return match[0]
         return False
+
+    def find_by_code(self, fund_code):
+        q = QSqlQuery(
+            "SELECT {} FROM my_fund WHERE `code`='{}'".format(','.join([v.field_name for v in self.columns()]), fund_code))
+        q.first()
+        if not q.record().value('code'):
+            return False
+        return q.record()
+
+    def get_fund_code_all(self):
+        """获取所有的基金代码
+
+        Returns:
+            [type]: [description]
+        """
+        codes = []
+        for index in range(0, self.rowCount()):
+            codes.append(self.record(index).value('code'))
+        return codes
 
     def columns(self):
         keys = MyFundQSqlTableModel.__dict__.keys()
