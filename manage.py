@@ -23,7 +23,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.connect_db()
         self.table_fund.setDb(self.db)
         self.sync_fund_data()
-        self.sync_fund_value_thread()
+        self.sync_fund_value_timer()
 
     def connect_db(self):
         self.db = QSqlDatabase.addDatabase('QSQLITE')
@@ -44,14 +44,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not self.table_fund.model().find_code_index(data.get('code')):
             self.table_fund.model().add_row(data)
 
+    def sync_fund_value_timer(self):
+        self.timer_sync_fund_value = QTimer(self)
+        self.timer_sync_fund_value.start(2000)
+        self.timer_sync_fund_value.timeout.connect(self.sync_fund_value_thread)
+
     def sync_fund_value_thread(self, fund_codes=None):
         if fund_codes is None:
             fund_codes = self.table_fund.model().get_fund_code_all()
 
-        self.sync_fund_value_thread = SyncFundValueThread(self, fund_codes)
-        self.sync_fund_value_thread.fund_data.connect(
+        self.thread_sync_fund_value = SyncFundValueThread(self, fund_codes)
+        self.thread_sync_fund_value.fund_data.connect(
             self.table_fund.model().update_row)
-        self.sync_fund_value_thread.start()
+
+        if not self.thread_sync_fund_value.isRunning():
+            self.thread_sync_fund_value.start()
 
 
 class SyncFundDataThread(QThread):
@@ -85,7 +92,6 @@ class SyncFundValueThread(QThread):
     def run(self):
         if not self.fund_codes:
             return True
-
         for i in range(0, len(self.fund_codes), 30):
             fund_code = self.fund_codes[i:i + 30]
             assess_data = util.get_fund_assess(fund_code)

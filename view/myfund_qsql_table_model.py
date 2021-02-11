@@ -78,13 +78,19 @@ class MyFundQSqlTableModel(QSqlTableModel):
             )))
         self.select()
 
-        self.beforeInsert.connect(self.befor_insert)
+        self.beforeInsert.connect(self.before_insert)
+        self.beforeUpdate.connect(self.before_update)
 
-    def befor_insert(self, record):
+    def before_insert(self, record):
         columns = self.columns()
         for column in columns:
             if record.isNull(column.field_name):
                 record.setValue(column.field_name, column.default_value)
+
+    def before_update(self, row, record):
+        if not record.value('hold_share') and record.value('hold_money') and record.value('unit_value'):
+            record.setValue('hold_share', Formula.hold_share(
+                record.value('hold_money'), record.value('unit_value')))
 
     def add_row(self, data):
         """添加一条记录
@@ -122,12 +128,8 @@ class MyFundQSqlTableModel(QSqlTableModel):
         if record.value('assess_unit_value') and data.get('prev_unit_value') and record.value('hold_share'):
             record.setValue('assess_profit', Formula.profit(record.value(
                 'assess_unit_value'), data.get('prev_unit_value'), record.value('hold_share')))
-
-        for column in self.columns():
-            if record.value(column.field_name):
-                self.setData(self.index(match.row(), self.fieldIndex(
-                    column.field_name)), record.value(column.field_name))
-        # self.submit()
+        self.updateRowInTable(match.row(), record)
+        self.selectRow(match.row())
 
     def find_code_index(self, fund_code):
         """查找基金代码
