@@ -70,6 +70,7 @@ def get_fund_assess(fund_codes):
     data = response.json()
 
     if data.get('Success') == True:
+        gz_time = data.get('Expansion').get('GZTIME')
         data = data.get('Datas')
     else:
         return False
@@ -98,7 +99,7 @@ def get_fund_assess(fund_codes):
             _data['prev_unit_value'] = float(v.get('NAV'))
 
         fund_data.append(_data)
-    return fund_data
+    return (fund_data, gz_time)
 
 
 class Formula:

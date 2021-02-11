@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import json
 import sys
+from datetime import datetime
 from pathlib import Path
 
 import akshare as ak
@@ -10,18 +11,23 @@ from PySide2.QtSql import QSqlDatabase
 from PySide2.QtWidgets import QApplication, QMainWindow
 
 from config import DATA_PATH, DB_PATH
-from view.main_window import Ui_MainWindow
 from utils import util
+from view.main_window import Ui_MainWindow
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
+    gz_time = datetime.now().strftime("%Y-%m-%d")
+
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
+
         self.line_search.set_completer_callback(self.search_completer)
 
         self.connect_db()
         self.table_fund.setDb(self.db)
+        self.update_total_money_label()
+
         self.sync_fund_data()
         self.sync_fund_value_timer()
 
@@ -44,6 +50,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not self.table_fund.model().find_code_index(data.get('code')):
             self.table_fund.model().add_row(data)
 
+    def update_total_money_label(self):
+        hold_total_money, hold_assess_total_profit = self.table_fund.model().get_total_money()
+        self.label_total_money.setText(
+            '持仓总金额:<b style="color:red">{}</b>元'.format(hold_total_money))
+        if hold_assess_total_profit > 0:
+            self.label_assess.setText(
+                '{}估算收益为<b style="color:red">{}</b>元, 恭喜老板吃肉!!'.format(self.gz_time, hold_assess_total_profit))
+        else:
+            self.label_assess.setText(
+                '{}估算收益为<b style="color:green">{}</b>元, 不要灰心, 继续补仓!'.format(self.gz_time, hold_assess_total_profit))
+
     def sync_fund_value_timer(self):
         self.timer_sync_fund_value = QTimer(self)
         self.timer_sync_fund_value.start(2000)
@@ -55,10 +72,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.thread_sync_fund_value = SyncFundValueThread(self, fund_codes)
         self.thread_sync_fund_value.fund_data.connect(
-            self.table_fund.model().update_row)
+            self.update_assess_profit)
+        self.thread_sync_fund_value.gz_time.connect(self.update_gz_time)
 
         if not self.thread_sync_fund_value.isRunning():
             self.thread_sync_fund_value.start()
+
+    def update_assess_profit(self, data):
+        self.table_fund.model().update_row(data)
+        self.update_total_money_label()
+
+    def update_gz_time(self, gz_time):
+        self.gz_time = gz_time
 
 
 class SyncFundDataThread(QThread):
@@ -84,6 +109,7 @@ class SyncFundDataThread(QThread):
 
 class SyncFundValueThread(QThread):
     fund_data = Signal(dict)
+    gz_time = Signal(str)
 
     def __init__(self, parent=None, fund_codes=None):
         super(SyncFundValueThread, self).__init__(parent)
@@ -94,7 +120,9 @@ class SyncFundValueThread(QThread):
             return True
         for i in range(0, len(self.fund_codes), 30):
             fund_code = self.fund_codes[i:i + 30]
-            assess_data = util.get_fund_assess(fund_code)
+            assess_data, gz_time = util.get_fund_assess(fund_code)
+
+            self.gz_time.emit(gz_time)
             if assess_data:
                 for v in assess_data:
                     self.fund_data.emit(v)

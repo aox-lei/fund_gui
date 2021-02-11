@@ -1,7 +1,7 @@
 from PySide2.QtCore import Qt
 from PySide2.QtSql import QSqlQuery, QSqlTableModel
 from PySide2.QtWidgets import QItemDelegate, QDoubleSpinBox
-from utils.util import Formula
+from utils.util import Formula, format_float
 
 
 class DontEditDelegate(QItemDelegate):
@@ -164,7 +164,31 @@ class MyFundQSqlTableModel(QSqlTableModel):
             codes.append(self.record(index).value('code'))
         return codes
 
+    def get_total_money(self):
+        """获取持仓总金额和估算总收益
+
+        Returns:
+            [type]: [description]
+        """
+        q = QSqlQuery(
+            'SELECT sum(hold_money) as total_money, sum(assess_profit) as assess_profit FROM my_fund')
+        q.first()
+
+        total_money = q.value('total_money')
+        if total_money is None:
+            total_money = 0
+        assess_profit = q.value('assess_profit')
+        if assess_profit is None:
+            assess_profit = 0
+
+        return (format_float(total_money), format_float(assess_profit))
+
     def columns(self):
+        """获取所有的字段信息
+
+        Returns:
+            [type]: [description]
+        """
         keys = MyFundQSqlTableModel.__dict__.keys()
 
         columns = []
