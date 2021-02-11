@@ -6,11 +6,13 @@ from pathlib import Path
 
 import akshare as ak
 import qdarkstyle
-from PySide2.QtCore import Qt, QThread, QTimer, Signal
+from PySide2.QtCore import Qt, QThread, QTimer, Signal, QUrl
 from PySide2.QtSql import QSqlDatabase
 from PySide2.QtWidgets import QApplication, QMainWindow
+from utils.web_browser import WebBrowser
+from utils import util
 
-from config import DATA_PATH, DB_PATH
+from config import DATA_PATH, DB_PATH, COOKIE_PATH
 from utils import util
 from view.main_window import Ui_MainWindow
 
@@ -22,7 +24,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
 
+        self.btn_login_ttjj.clicked.connect(self.open_web_browser)
         self.line_search.set_completer_callback(self.search_completer)
+        self.check_login()
 
         self.connect_db()
         self.table_fund.setDb(self.db)
@@ -35,6 +39,39 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.db = QSqlDatabase.addDatabase('QSQLITE')
         self.db.setDatabaseName(DB_PATH)
         self.db.open()
+
+    def open_web_browser(self):
+        self.browser_view = WebBrowser()
+        self.browser_view.load(QUrl(
+            'https://login.1234567.com.cn/?direct_url=https%3a%2f%2ftrade.1234567.com.cn%2fMyAssets%2fDefault'))
+        self.browser_view.show()
+
+        self.browser_view.close_browser.connect(self.save_cookie)
+
+    def save_cookie(self, cookies):
+        if not cookies:
+            return True
+        cookie = ''
+        for k, v in cookies.items():
+            cookie += '{}={};'.format(k, v)
+        with open(COOKIE_PATH, 'w') as f:
+            f.write(cookie)
+        self.check_login()
+
+    def check_login(self):
+        """检测登录状态
+
+        Returns:
+            [type]: [description]
+        """
+        if not COOKIE_PATH.exists():
+            return True
+        with open(COOKIE_PATH, 'r') as f:
+            cookies = f.read()
+        result = util.check_login(cookies)
+        if result:
+            self.btn_login_ttjj.setText('登录成功')
+            self.btn_login_ttjj.setEnabled(False)
 
     def sync_fund_data(self):
         self.sync_fund_thread = SyncFundDataThread()
