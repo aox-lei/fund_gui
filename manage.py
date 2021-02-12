@@ -6,14 +6,13 @@ from pathlib import Path
 
 import akshare as ak
 import qdarkstyle
-from PySide2.QtCore import Qt, QThread, QTimer, Signal, QUrl
+from PySide2.QtCore import Qt, QThread, QTimer, QUrl, Signal
 from PySide2.QtSql import QSqlDatabase
 from PySide2.QtWidgets import QApplication, QMainWindow
-from utils.web_browser import WebBrowser
-from utils import util
 
-from config import DATA_PATH, DB_PATH, COOKIE_PATH
+from config import COOKIE_PATH, DATA_PATH, DB_PATH
 from utils import util
+from utils.web_browser import WebBrowser
 from view.main_window import Ui_MainWindow
 
 
@@ -25,7 +24,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         self.btn_login_ttjj.clicked.connect(self.open_web_browser)
+        self.btn_sync.clicked.connect(self.sync_hold_fund)
         self.line_search.set_completer_callback(self.search_completer)
+
+        self.ttjj_web = util.TtjjWeb()
         self.check_login()
 
         self.connect_db()
@@ -34,6 +36,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.sync_fund_data()
         self.sync_fund_value_timer()
+
+    def sync_hold_fund(self):
+        self.thread_sync_hold_fund = SyncHoldFundThread(
+            self, self.get_cookie())
+        self.thread_sync_hold_fund.fund_data.connect(
+            self.save_hold_fund_info)
+
+        if not self.thread_sync_hold_fund.isRunning():
+            self.thread_sync_hold_fund.start()
 
     def connect_db(self):
         self.db = QSqlDatabase.addDatabase('QSQLITE')
@@ -58,20 +69,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             f.write(cookie)
         self.check_login()
 
+    def get_cookie(self):
+        if not COOKIE_PATH.exists():
+            return False
+        with open(COOKIE_PATH, 'r') as f:
+            cookies = f.read()
+
+        return cookies
+
     def check_login(self):
         """检测登录状态
 
         Returns:
             [type]: [description]
         """
-        if not COOKIE_PATH.exists():
-            return True
-        with open(COOKIE_PATH, 'r') as f:
-            cookies = f.read()
-        result = util.check_login(cookies)
+        cookies = self.get_cookie()
+
+        self.ttjj_web.set_cookie(cookies)
+        result = self.ttjj_web.check_login()
+
         if result:
             self.btn_login_ttjj.setText('登录成功')
             self.btn_login_ttjj.setEnabled(False)
+            self.btn_sync.setEnabled(True)
 
     def sync_fund_data(self):
         self.sync_fund_thread = SyncFundDataThread()
@@ -119,6 +139,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.table_fund.model().update_row(data)
         self.update_total_money_label()
 
+    def save_hold_fund_info(self, data):
+        if self.table_fund.model().find_code_index(data.get('code')):
+            self.table_fund.model().update_row(data)
+            self.update_total_money_label()
+        else:
+            self.table_fund.model().add_row(data)
+
     def update_gz_time(self, gz_time):
         self.gz_time = gz_time
 
@@ -163,6 +190,24 @@ class SyncFundValueThread(QThread):
             if assess_data:
                 for v in assess_data:
                     self.fund_data.emit(v)
+
+
+class SyncHoldFundThread(QThread):
+    fund_data = Signal(dict)
+
+    def __init__(self, parent=None, cookie=None):
+        super(SyncHoldFundThread, self).__init__(parent)
+        self.cookie = cookie
+
+    def run(self):
+        if not self.cookie:
+            return True
+        ttjj_web = util.TtjjWeb(self.cookie)
+        hold_fund_list = ttjj_web.get_hold_list()
+        if not hold_fund_list:
+            return True
+        for info in hold_fund_list:
+            self.fund_data.emit(info)
 
 
 if __name__ == "__main__":

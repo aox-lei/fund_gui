@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
 from utils import util
-
-util.get_fund_assess(['161725'])
+cookie = 'cp_token=11f01c025444427ca33430d7c2750e53;fund_login_qrid=2443609e669549108aeecf5014867af7;st_inirUrl=;st_pvi=08446224274759;st_sp=2021-02-05%2020%3A01%3A15;LToken=680dc56605d84cc8969a6fc921d032d9;fund_trade_trackid=B0Z9OwSGOt3yBuuYX7Y4spMPKWSIHpFPJgvoQDLFgTLdjmPXt8RGzDQHbq0lD8wyA8ah0BGKDloWK/ljfqrUgQ==;ASP.NET_SessionId=2rly3n02kakjt5zfztpgy3vq;TradeLoginToken=a6e8124d21514783ac3b71077e32ffa8;st_si=12504535622906;st_sn=1;st_psi=20210211084313550-119085303933-5045343458;st_asi=delete;fund_trade_cn=V4DbxPb+0Y2WSPsarblpMabbz1C5sDp8xBAAW6B2OOHb6+MCAmOjaCbI0NlNqwPQ8qK+jV1Nv4b1yIyH+ws+4CAJEkHpJ4XKoTnX5vS5X1dCdhR7ez4=;fund_trade_name=Vl8iS+5x8skn4RVmRMsFvjLdpzmH6l/N1CBd0QOhcodYX11xzohCxL4Ij7CpFD3nQDl2jTo0;fund_trade_visitor=V627E/vn/stVNh4S9UsZjYe/n3LHn1sGMrK50wBB4es5u1xBsSDijF4TovjFiy+nXXjIRz+n;fund_trade_risk=Vp2RlfoxhssFt4OIGfsecInGCZEHZUw7jdPq0eLL6xQnb1yZjK6FfQ4UOazjyBUnQwt/BmDg;fund_trade_gps=7;VipLevel=2;UTOKEN=V4DbxPb+0Y2WSPsarblpMabbz1C5sDp8xBAAW6B2OOHb6+MCAmOjaCbI0NlNqwPQ8qK+j01ciDPw+ZEHP80V4x/+KOC9b+7n+enLVtRU/7kT1Khu7dA=;'
+o = util.TtjjWeb(cookie)
+print(o.get_hold_list())

@@ -6,7 +6,7 @@ import uuid
 
 import akshare as ak
 import requests
-from requests_html import HTML
+from requests_html import HTML, HTMLSession
 from datetime import datetime
 decimal.getcontext().rounding = 'ROUND_HALF_UP'
 
@@ -91,12 +91,13 @@ def get_fund_assess(fund_codes):
             'assess_growth_rate': float(assess_enhance_rate),
             'unit_value': float(v.get('NAV')),
         }
-        if v.get('PDATE') == to_str(to_datetime(v.get('GZTIME'), '%Y-%m-%d %H:%M')):
-            # 如果最新净值已经更新, 则根据当前净值和增长率计算昨日净值
-            _data['prev_unit_value'] = Formula.prev_unit_value(
-                _data.get('unit_value'), _data.get('assess_growth_rate'))
-        else:
-            _data['prev_unit_value'] = float(v.get('NAV'))
+        if v.get('GZTIME') != '--':
+            if v.get('PDATE') == to_str(to_datetime(v.get('GZTIME'), '%Y-%m-%d %H:%M')):
+                # 如果最新净值已经更新, 则根据当前净值和增长率计算昨日净值
+                _data['prev_unit_value'] = Formula.prev_unit_value(
+                    _data.get('unit_value'), _data.get('assess_growth_rate'))
+            else:
+                _data['prev_unit_value'] = float(v.get('NAV'))
 
         fund_data.append(_data)
     return (fund_data, gz_time)
@@ -158,25 +159,6 @@ class Formula:
         return format_float(hold_money / unit_value)
 
 
-def check_login(cookie):
-    url = 'https://trade7.1234567.com.cn/do.aspx/CheckLogin'
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36',
-        'Content-Type': 'application/json; charset=utf-8',
-        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-        'Cookie': cookie
-    }
-    response = requests.post(url, headers=headers)
-    data = response.json()
-    try:
-        data = data.get('d')
-        data = json.loads(data)
-        name = data.get('Name')
-        return name
-    except Exception as e:
-        return False
-
-
 def get_hold_fund(cookie):
     """获取持仓信息
 
@@ -233,3 +215,117 @@ def get_hold_fund(cookie):
         })
 
     return data
+
+
+class TtjjWeb(object):
+    # 检测登录
+    CHECK_LOGIN_URL = 'https://trade7.1234567.com.cn/do.aspx/CheckLogin'
+    # 获取持仓列表
+    HOLD_LIST_URL = 'https://trade7.1234567.com.cn/MyAssets/do.aspx/GetHoldAssetsNew?{}'.format(
+        int(time.time()))
+    HOLD_INFO_URL = 'https://trade.1234567.com.cn/myassets/single?iv=false&fc={fund_code}'
+    USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36'
+
+    def __init__(self, cookie=None):
+        self.cookie = cookie
+
+    def set_cookie(self, cookie):
+        self.cookie = cookie
+
+    def check_login(self):
+        """检测登录状态
+
+        Returns:
+            [type]: [description]
+        """
+        headers = {
+            'User-Agent': self.USER_AGENT,
+            'Content-Type': 'application/json; charset=utf-8',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+            'Cookie': self.cookie
+        }
+        response = requests.post(self.CHECK_LOGIN_URL, headers=headers)
+        data = response.json()
+        try:
+            data = data.get('d')
+            data = json.loads(data)
+            name = data.get('Name')
+            return name
+        except Exception as e:
+            return False
+
+    def get_hold_list(self):
+        headers = {
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Cookie': self.cookie,
+            'User-Agent': self.USER_AGENT,
+        }
+        post_data = "{type:'0',sorttype:'5',isNeedTotal:true}"
+        response = requests.post(
+            self.HOLD_LIST_URL, headers=headers, data=post_data)
+        data = response.json()
+        data = json.loads(data.get('d'))
+
+        data = '<table>{}</table>'.format(data.get('content'))
+
+        html = HTML(html=data)
+        fund_name = html.find('tr > td > p.f16 > a.lk')
+        fund_name = [info.text for info in fund_name]
+
+        data = []
+        for index, info in enumerate(fund_name):
+            _info = info.split('（')
+            fund_code = _info[1].strip('）')
+            _data = self.get_hold_info(fund_code)
+            if _data:
+                data.append(_data)
+
+        return data
+
+    def get_hold_info(self, fund_code):
+        headers = {
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Cookie': self.cookie,
+            'User-Agent': self.USER_AGENT,
+        }
+        session = HTMLSession()
+        response = session.get(self.HOLD_INFO_URL.format(
+            fund_code=fund_code), headers=headers)
+
+        fund_type = response.html.find(
+            'div.fr.section > div.head > div.clear > div.fl.w200.dashleft > ul:nth-child(1) > li:nth-child(1)', first=True)
+        fund_type = fund_type.text.replace('产品类型：', '').replace('基金类型：', '')
+        print(fund_type)
+        if fund_type in ['高端理财']:
+            return False
+
+        hold_money = response.html.find(
+            'div.clear > div.balance > div:nth-child(3) > span:nth-child(1) > strong', first=True)
+        hold_share = response.html.find(
+            'div.clear > div.balance > div:nth-child(3) > span.ft.w220 > span', first=True)
+        hold_cost = response.html.find('#tanbaodanjia > span', first=True)
+        if hold_cost.text == '--':
+            hold_cost = 0
+        else:
+            hold_cost = format_float(hold_cost.text.replace(',', ''))
+        unit_value = response.html.find(
+            'div.fr.section > div.head > div.h40.lh40 > span:nth-child(3) > strong', first=True)
+
+        fund_name = response.html.find(
+            'div.fr.section > div.head > div.h40.lh40 > h4 > a', first=True)
+        fund_name = fund_name.text.split('(')[0]
+        return {
+            'hold_money': format_float(hold_money.text.replace(',', '')),
+            'hold_share': format_float(hold_share.text.replace(',', '')),
+            'hold_cost': hold_cost,
+            'unit_value': format_float(unit_value.text.replace(',', '')),
+            'type': fund_type,
+            'name': fund_name,
+            'code': fund_code
+        }

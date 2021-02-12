@@ -1,15 +1,6 @@
 from PySide2.QtCore import QUrl, Signal
 from PySide2.QtWebEngineWidgets import QWebEngineProfile, QWebEngineView
-from PySide2.QtWebEngineCore import QWebEngineUrlRequestInterceptor
 from PySide2.QtWidgets import QWidget
-
-
-class aaa(QWebEngineUrlRequestInterceptor):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-
-    def interceptRequest(self, info):
-        print(info)
 
 
 class WebBrowser(QWebEngineView):
