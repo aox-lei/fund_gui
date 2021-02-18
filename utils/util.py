@@ -300,8 +300,9 @@ class TtjjWeb(object):
 
         fund_type = response.html.find(
             'div.fr.section > div.head > div.clear > div.fl.w200.dashleft > ul:nth-child(1) > li:nth-child(1)', first=True)
+
         fund_type = fund_type.text.replace('产品类型：', '').replace('基金类型：', '')
-        print(fund_type)
+
         if fund_type in ['高端理财']:
             return False
 
