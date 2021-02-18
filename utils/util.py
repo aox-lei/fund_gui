@@ -330,3 +330,37 @@ class TtjjWeb(object):
             'name': fund_name,
             'code': fund_code
         }
+
+
+def average_line(fund_code, start_time=None, end_time=None):
+    assess_data = get_fund_assess([fund_code])
+    gz_time = assess_data[1]
+    assess_data = assess_data[0][0]
+    assess_data
+
+    df = ak.fund_em_open_fund_info(fund=fund_code, indicator="单位净值走势")
+    df = df.append({
+        '净值日期': datetime.strptime(
+            gz_time, '%Y-%m-%d').date(),
+        '单位净值': assess_data.get('assess_unit_value')}, ignore_index=True)
+    df = df[['净值日期', '单位净值']]
+    df.rename(columns={
+        '净值日期': 'date',
+        '单位净值': 'unit_value'
+    }, inplace=True)
+
+    df['m5'] = df['unit_value'].rolling(5).mean()
+    df['m10'] = df['unit_value'].rolling(10).mean()
+    df['m30'] = df['unit_value'].rolling(30).mean()
+    df['m60'] = df['unit_value'].rolling(60).mean()
+
+    if start_time and end_time:
+        df = df[(df['date'] >= datetime.strptime(start_time, '%Y-%m-%d').date())
+                & (df['date'] <= datetime.strptime(end_time, '%Y-%m-%d').date())]
+    elif start_time:
+        df = df[(df['date'] >= datetime.strptime(start_time, '%Y-%m-%d').date())]
+    elif end_time:
+        df = df[(df['date'] <= datetime.strptime(end_time, '%Y-%m-%d').date())]
+
+    df.set_index(['date'], inplace=True)
+    return df

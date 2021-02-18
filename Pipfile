@@ -13,6 +13,7 @@ pyside2 = "==5.14.2.3"
 requests = "*"
 requests-html = "*"
 requests-futures = "*"
+pyecharts = "*"
 
 [requires]
 python_version = "3.7"
