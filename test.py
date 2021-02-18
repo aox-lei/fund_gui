@@ -2,6 +2,6 @@
 #%%
 from utils import util
 
-util.average_line('161725', '2021-01-01')
-
+df = util.average_line('001832', '2021-02-01')
+df
 # %%

@@ -339,10 +339,12 @@ def average_line(fund_code, start_time=None, end_time=None):
     assess_data
 
     df = ak.fund_em_open_fund_info(fund=fund_code, indicator="单位净值走势")
-    df = df.append({
-        '净值日期': datetime.strptime(
-            gz_time, '%Y-%m-%d').date(),
-        '单位净值': assess_data.get('assess_unit_value')}, ignore_index=True)
+    now_date = datetime.strptime(
+        gz_time, '%Y-%m-%d').date()
+    if now_date not in df['净值日期'].unique():
+        df = df.append({
+            '净值日期': now_date,
+            '单位净值': assess_data.get('assess_unit_value')}, ignore_index=True)
     df = df[['净值日期', '单位净值']]
     df.rename(columns={
         '净值日期': 'date',

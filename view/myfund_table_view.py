@@ -47,6 +47,7 @@ class ChartsDialog(Ui_Dialog, QDialog):
         self.start_time.setCalendarPopup(True)
         self.end_time.setCalendarPopup(True)
         self.start_time.dateChanged.connect(self.change_start_time)
+        self.end_time.dateChanged.connect(self.change_end_time)
         self.web_engine_view = QWebEngineView()
 
         charts = self.get_charts()
@@ -54,11 +55,13 @@ class ChartsDialog(Ui_Dialog, QDialog):
         self.verticalLayout.addWidget(self.web_engine_view)
 
     def change_start_time(self, date):
-        charts = self.get_charts(start_time=date.toString('yyyy-MM-dd'))
+        charts = self.get_charts(start_time=date.toString(
+            'yyyy-MM-dd'), end_time=self.end_time.date().toString('yyyy-MM-dd'))
         self.web_engine_view.load(QUrl.fromLocalFile(charts.render()))
 
     def change_end_time(self, date):
-        charts = self.get_charts(end_time=date.toString('yyyy-MM-dd'))
+        charts = self.get_charts(start_time=self.start_time.date().toString(
+            'yyyy-MM-dd'), end_time=date.toString('yyyy-MM-dd'))
         self.web_engine_view.load(QUrl.fromLocalFile(charts.render()))
 
     def get_charts(self, start_time=None, end_time=None):
