@@ -85,6 +85,7 @@ def get_fund_assess(fund_codes):
             assess_enhance_rate = float(v.get('GSZZL'))
         except Exception as e:
             assess_enhance_rate = 0
+
         _data = {
             'code': v.get('FCODE'),
             'assess_unit_value': float(assess_unit_value),
@@ -338,23 +339,26 @@ def average_line(fund_code, start_time=None, end_time=None):
     assess_data = assess_data[0][0]
     assess_data
 
-    df = ak.fund_em_open_fund_info(fund=fund_code, indicator="单位净值走势")
+    df = ak.fund_em_open_fund_info(fund=fund_code, indicator="累计净值走势")
     now_date = datetime.strptime(
         gz_time, '%Y-%m-%d').date()
     if now_date not in df['净值日期'].unique():
         df = df.append({
             '净值日期': now_date,
-            '单位净值': assess_data.get('assess_unit_value')}, ignore_index=True)
-    df = df[['净值日期', '单位净值']]
+            '累计净值': Formula.prev_unit_value(assess_data.get('assess_unit_value'), assess_data.get('assess_growth_rate'))}, ignore_index=True)
+
+    df = df[['净值日期', '累计净值']]
     df.rename(columns={
         '净值日期': 'date',
-        '单位净值': 'unit_value'
+        '累计净值': 'unit_value'
     }, inplace=True)
 
-    df['m5'] = df['unit_value'].rolling(5).mean()
-    df['m10'] = df['unit_value'].rolling(10).mean()
-    df['m30'] = df['unit_value'].rolling(30).mean()
-    df['m60'] = df['unit_value'].rolling(60).mean()
+    for v in [5, 10, 30, 60]:
+        df['m{}'.format(v)] = df['unit_value'].rolling(v).mean()
+        df['m{}'.format(v)] = df['m{}'.format(v)].round(4)
+        df['d{}'.format(v)] = (df['unit_value'] -
+                               df['m{}'.format(v)]) / df['m{}'.format(v)]*100
+        df['d{}'.format(v)] = df['d{}'.format(v)].round(2)
 
     if start_time and end_time:
         df = df[(df['date'] >= datetime.strptime(start_time, '%Y-%m-%d').date())

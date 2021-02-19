@@ -3,7 +3,8 @@ from datetime import datetime, timedelta
 
 from pyecharts import options as opts
 from pyecharts.charts import Line
-from PySide2.QtCore import QUrl, QDate
+from pyecharts.commons.utils import JsCode
+from PySide2.QtCore import QDate, QUrl
 from PySide2.QtWebEngineWidgets import QWebEngineView
 from PySide2.QtWidgets import QDialog, QTableView
 from utils.util import average_line
@@ -69,10 +70,29 @@ class ChartsDialog(Ui_Dialog, QDialog):
             start_time = (datetime.now() + timedelta(days=-30)
                           ).strftime('%Y-%m-%d')
 
+        js_code = '''
+        function(params){
+            var str = params.data.name.date +'<br/>';
+            str += '累计净值: '+ params.data.value+'<br/>';
+            str += '5日均线偏离: '+ params.data.name.d5+'%<br/>';
+            str += '10日均线偏离: '+ params.data.name.d10+'%<br/>';
+            str += '30日均线偏离: '+ params.data.name.d30+'%<br/>';
+            str += '60日均线偏离: '+ params.data.name.d60+'%<br/>';
+            return str;
+        }
+        '''
+
         df = average_line(self.fund_code, start_time, end_time)
         line = Line(init_opts=opts.InitOpts(bg_color='#fff'))
         line.add_xaxis(df.index.tolist())
-        line.add_yaxis('单位净值', df['unit_value'].tolist(), )
+
+        data = df.T.to_dict()
+        data = [opts.LineItem({**v, **{'date': k}}, v.get('unit_value'))
+                for k, v in data.items()]
+
+        line.add_yaxis('单位净值', data,
+                       tooltip_opts=opts.TooltipOpts(formatter=JsCode(js_code)))
+
         line.add_yaxis('m5', df['m5'].tolist(),
                        is_symbol_show=True, is_smooth=True)
         line.add_yaxis('m10', df['m10'].tolist(),
@@ -88,7 +108,7 @@ class ChartsDialog(Ui_Dialog, QDialog):
                                 "rotate": 180},
                 is_show=False
             ),
-            yaxis_opts=opts.AxisOpts(min_='dataMin')
+            yaxis_opts=opts.AxisOpts(min_='dataMin'),
         )
         line.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
         return line
