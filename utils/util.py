@@ -335,17 +335,18 @@ class TtjjWeb(object):
 
 def average_line(fund_code, start_time=None, end_time=None):
     assess_data = get_fund_assess([fund_code])
+    print(assess_data)
     gz_time = assess_data[1]
     assess_data = assess_data[0][0]
-    assess_data
 
     df = ak.fund_em_open_fund_info(fund=fund_code, indicator="累计净值走势")
     now_date = datetime.strptime(
         gz_time, '%Y-%m-%d').date()
     if now_date not in df['净值日期'].unique():
-        df = df.append({
-            '净值日期': now_date,
-            '累计净值': Formula.prev_unit_value(assess_data.get('assess_unit_value'), assess_data.get('assess_growth_rate'))}, ignore_index=True)
+        if assess_data.get('assess_growth_rate') > 0:
+            df = df.append({
+                '净值日期': now_date,
+                '累计净值': Formula.prev_unit_value(assess_data.get('assess_unit_value'), assess_data.get('assess_growth_rate'))}, ignore_index=True)
 
     df = df[['净值日期', '累计净值']]
     df.rename(columns={
@@ -357,7 +358,7 @@ def average_line(fund_code, start_time=None, end_time=None):
         df['m{}'.format(v)] = df['unit_value'].rolling(v).mean()
         df['m{}'.format(v)] = df['m{}'.format(v)].round(4)
         df['d{}'.format(v)] = (df['unit_value'] -
-                               df['m{}'.format(v)]) / df['m{}'.format(v)]*100
+                               df['m{}'.format(v)]) / df['m{}'.format(v)] * 100
         df['d{}'.format(v)] = df['d{}'.format(v)].round(2)
 
     if start_time and end_time:
