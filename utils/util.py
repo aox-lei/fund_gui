@@ -120,6 +120,19 @@ class Formula:
         return format_float(unit_value / (1 + enhance_rate / 100))
 
     @classmethod
+    def nex_unit_value(cls, unit_value, enhance_rate):
+        """根据当前净值推算下一日净值
+
+        Args:
+            unit_value ([type]): [description]
+            enhance_rate ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
+        return format_float(unit_value * (1 + enhance_rate / 100))
+
+    @classmethod
     def hold_money(cls, unit_value, hold_share):
         """持仓总金额 = 最新净值*持有份额
 
@@ -335,7 +348,7 @@ class TtjjWeb(object):
 
 def average_line(fund_code, start_time=None, end_time=None):
     assess_data = get_fund_assess([fund_code])
-    print(assess_data)
+
     gz_time = assess_data[1]
     assess_data = assess_data[0][0]
 
@@ -343,10 +356,10 @@ def average_line(fund_code, start_time=None, end_time=None):
     now_date = datetime.strptime(
         gz_time, '%Y-%m-%d').date()
     if now_date not in df['净值日期'].unique():
-        if assess_data.get('assess_growth_rate') > 0:
+        if assess_data.get('assess_growth_rate') != 0:
             df = df.append({
                 '净值日期': now_date,
-                '累计净值': Formula.prev_unit_value(assess_data.get('assess_unit_value'), assess_data.get('assess_growth_rate'))}, ignore_index=True)
+                '累计净值': Formula.nex_unit_value(df.iloc[-1]['累计净值'], assess_data.get('assess_growth_rate'))}, ignore_index=True)
 
     df = df[['净值日期', '累计净值']]
     df.rename(columns={

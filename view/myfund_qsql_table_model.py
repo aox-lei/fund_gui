@@ -91,6 +91,8 @@ class MyFundQSqlTableModel(QSqlTableModel):
         if not record.value('hold_share') and record.value('hold_money') and record.value('unit_value'):
             record.setValue('hold_share', Formula.hold_share(
                 record.value('hold_money'), record.value('unit_value')))
+        if record.value('hold_money') == 0:
+            record.setValue('hold_share', 0)
 
     def add_row(self, data):
         """添加一条记录
