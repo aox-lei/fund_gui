@@ -1,6 +1,8 @@
 from PySide2.QtCore import Qt
 from PySide2.QtSql import QSqlQuery, QSqlTableModel
 from PySide2.QtWidgets import QItemDelegate, QDoubleSpinBox
+from PySide2.QtGui import QColor, QBrush
+
 from utils.util import Formula, format_float
 
 

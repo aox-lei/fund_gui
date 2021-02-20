@@ -8,7 +8,7 @@ import akshare as ak
 import qdarkstyle
 from PySide2.QtCore import Qt, QThread, QTimer, QUrl, Signal
 from PySide2.QtSql import QSqlDatabase
-from PySide2.QtWidgets import QApplication, QMainWindow
+from PySide2.QtWidgets import QApplication, QMainWindow, QAbstractItemView
 
 from config import COOKIE_PATH, DATA_PATH, DB_PATH
 from utils import util
@@ -136,6 +136,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.thread_sync_fund_value.start()
 
     def update_assess_profit(self, data):
+        if self.table_fund.state() == QAbstractItemView.State.EditingState:
+            return True
         self.table_fund.model().update_row(data)
         self.update_total_money_label()
 

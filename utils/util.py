@@ -367,7 +367,8 @@ def average_line(fund_code, start_time=None, end_time=None):
         '累计净值': 'unit_value'
     }, inplace=True)
 
-    for v in [5, 10, 30, 60]:
+    df['unit_value'] = df['unit_value'].astype('float')
+    for v in [5, 10, 15, 20, 30, 60]:
         df['m{}'.format(v)] = df['unit_value'].rolling(v).mean()
         df['m{}'.format(v)] = df['m{}'.format(v)].round(4)
         df['d{}'.format(v)] = (df['unit_value'] -

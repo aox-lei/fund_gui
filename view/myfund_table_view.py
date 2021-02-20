@@ -4,9 +4,10 @@ from datetime import datetime, timedelta
 from pyecharts import options as opts
 from pyecharts.charts import Line
 from pyecharts.commons.utils import JsCode
-from PySide2.QtCore import QDate, QUrl
+from PySide2.QtCore import QDate, QUrl, Qt
 from PySide2.QtWebEngineWidgets import QWebEngineView
-from PySide2.QtWidgets import QDialog, QTableView
+from PySide2.QtWidgets import QDialog, QTableView, QApplication, QAction
+from PySide2.QtGui import QCursor, QColor, QBrush
 from utils.util import average_line
 
 from .charts import Ui_Dialog
@@ -18,6 +19,27 @@ class MyFundTableView(QTableView):
         super(MyFundTableView, self).__init__(parent)
         self._parent = parent
         self.doubleClicked.connect(self.show_dialog)
+
+        self.setContextMenuPolicy(Qt.ActionsContextMenu)
+
+        option = QAction(self)
+        option.setText('删除')
+        option.triggered.connect(self.del_)
+
+        # self.model().item(1, 1).setForeground(QBrush(QColor(255, 0, 0)))
+        self.addAction(option)
+
+        self.horizontalHeader().setSortIndicatorShown(True)
+        self.horizontalHeader().sortIndicatorChanged.connect(self.change_sort)
+
+    def change_sort(self, column_index, order):
+        self.model().setSort(column_index, order)
+        self.model().select()
+
+    def del_(self):
+        selected_row = self.selectedIndexes()[0].row()
+        self.model().removeRow(selected_row)
+        self.model().select()
 
     def setDb(self, db):
         model = MyFundQSqlTableModel(self, db)
@@ -37,6 +59,11 @@ class ChartsDialog(Ui_Dialog, QDialog):
     def __init__(self, parent=None, fund_code=None, fund_name=None):
         super(ChartsDialog, self).__init__(parent)
         self.setupUi(self)
+
+        self.desktop = QApplication.desktop()
+        self.resize(self.desktop.screenGeometry().width(),
+                    self.desktop.screenGeometry().height())
+
         self.fund_code = fund_code
         self.fund_name = fund_name
         self.label_fund_name.setText(
@@ -77,6 +104,7 @@ class ChartsDialog(Ui_Dialog, QDialog):
             str += '累计净值: '+ params.data.value+'<br/>';
             str += '5日均线偏离: '+ params.data.name.d5+'%<br/>';
             str += '10日均线偏离: '+ params.data.name.d10+'%<br/>';
+            str += '15日均线偏离: '+ params.data.name.d15+'%<br/>';
             str += '30日均线偏离: '+ params.data.name.d30+'%<br/>';
             str += '60日均线偏离: '+ params.data.name.d60+'%<br/>';
             return str;
@@ -84,7 +112,9 @@ class ChartsDialog(Ui_Dialog, QDialog):
         '''
 
         df = average_line(self.fund_code, start_time, end_time)
-        line = Line(init_opts=opts.InitOpts(bg_color='#fff'))
+
+        line = Line(init_opts=opts.InitOpts(
+            bg_color='#fff', width='{}px'.format(self.width() - 100), height='{}px'.format(self.height() - 100)))
         line.add_xaxis(df.index.tolist())
 
         data = df.T.to_dict()
@@ -97,6 +127,10 @@ class ChartsDialog(Ui_Dialog, QDialog):
         line.add_yaxis('m5', df['m5'].tolist(),
                        is_symbol_show=True, is_smooth=True)
         line.add_yaxis('m10', df['m10'].tolist(),
+                       is_symbol_show=True, is_smooth=True)
+        line.add_yaxis('m15', df['m15'].tolist(),
+                       is_symbol_show=True, is_smooth=True)
+        line.add_yaxis('m20', df['m20'].tolist(),
                        is_symbol_show=True, is_smooth=True)
         line.add_yaxis('m30', df['m30'].tolist(),
                        is_symbol_show=False, is_smooth=True)
