@@ -130,8 +130,8 @@ class ChartsDialog(Ui_Dialog, QDialog):
                        is_symbol_show=True, is_smooth=True)
         line.add_yaxis('m15', df['m15'].tolist(),
                        is_symbol_show=True, is_smooth=True)
-        line.add_yaxis('m20', df['m20'].tolist(),
-                       is_symbol_show=True, is_smooth=True)
+        # line.add_yaxis('m20', df['m20'].tolist(),
+        #                is_symbol_show=True, is_smooth=True)
         line.add_yaxis('m30', df['m30'].tolist(),
                        is_symbol_show=False, is_smooth=True)
         line.add_yaxis('m60', df['m60'].tolist(),
