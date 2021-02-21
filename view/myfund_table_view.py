@@ -68,7 +68,7 @@ class ChartsDialog(Ui_Dialog, QDialog):
         self.fund_name = fund_name
         self.label_fund_name.setText(
             '{}({})'.format(self.fund_name, self.fund_code))
-        self.start_time.setDate(QDate.fromString((datetime.now() + timedelta(days=-30)
+        self.start_time.setDate(QDate.fromString((datetime.now() + timedelta(days=-60)
                                                   ).strftime('%Y-%m-%d'), 'yyyy-MM-dd'))
         self.end_time.setDate(QDate.currentDate())
         self.start_time.setDisplayFormat('yyyy-MM-dd')
@@ -95,7 +95,7 @@ class ChartsDialog(Ui_Dialog, QDialog):
 
     def get_charts(self, start_time=None, end_time=None):
         if start_time is None and end_time is None:
-            start_time = (datetime.now() + timedelta(days=-30)
+            start_time = (datetime.now() + timedelta(days=-60)
                           ).strftime('%Y-%m-%d')
 
         js_code = '''

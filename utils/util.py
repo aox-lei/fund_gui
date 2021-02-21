@@ -92,6 +92,7 @@ def get_fund_assess(fund_codes):
             'assess_growth_rate': float(assess_enhance_rate),
             'unit_value': float(v.get('NAV')),
         }
+        # TODO: 这里计算有点问题
         if v.get('GZTIME') != '--':
             if v.get('PDATE') == to_str(to_datetime(v.get('GZTIME'), '%Y-%m-%d %H:%M')):
                 # 如果最新净值已经更新, 则根据当前净值和增长率计算昨日净值
