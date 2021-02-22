@@ -7,7 +7,7 @@ from pyecharts.commons.utils import JsCode
 from PySide2.QtCore import QDate, QUrl, Qt
 from PySide2.QtWebEngineWidgets import QWebEngineView
 from PySide2.QtWidgets import QDialog, QTableView, QApplication, QAction
-from PySide2.QtGui import QCursor, QColor, QBrush
+from PySide2.QtGui import QCursor, QColor, QBrush, QDesktopServices
 from utils.util import average_line
 
 from .charts import Ui_Dialog
@@ -26,7 +26,6 @@ class MyFundTableView(QTableView):
         option.setText('删除')
         option.triggered.connect(self.del_)
 
-        # self.model().item(1, 1).setForeground(QBrush(QColor(255, 0, 0)))
         self.addAction(option)
 
         self.horizontalHeader().setSortIndicatorShown(True)
@@ -50,6 +49,9 @@ class MyFundTableView(QTableView):
         self.setColumnWidth(12, 200)
 
     def show_dialog(self, index):
+        if index.column() == 1:
+            fund_code = self.model().record(index.row()).value('code')
+            QDesktopServices.openUrl(QUrl('http://fund.eastmoney.com/{}.html'.format(fund_code)))
         if index.column() == 2:
             fund_code = self.model().record(index.row()).value('code')
             fund_name = self.model().record(index.row()).value('name')
