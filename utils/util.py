@@ -92,7 +92,6 @@ def get_fund_assess(fund_codes):
             'assess_growth_rate': float(assess_enhance_rate),
             'unit_value': float(v.get('NAV')),
         }
-        # TODO: 这里计算有点问题
         if v.get('GZTIME') != '--':
             if v.get('PDATE') == to_str(to_datetime(v.get('GZTIME'), '%Y-%m-%d %H:%M')):
                 # 如果最新净值已经更新, 则根据当前净值和增长率计算昨日净值
@@ -323,6 +322,7 @@ class TtjjWeb(object):
 
         hold_money = response.html.find(
             'div.clear > div.balance > div:nth-child(3) > span:nth-child(1) > strong', first=True)
+
         hold_share = response.html.find(
             'div.clear > div.balance > div:nth-child(3) > span.ft.w220 > span', first=True)
         hold_cost = response.html.find('#tanbaodanjia > span', first=True)

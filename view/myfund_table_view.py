@@ -45,6 +45,9 @@ class MyFundTableView(QTableView):
         model = MyFundQSqlTableModel(self, db)
         self.setModel(model)
         self.setColumnHidden(0, True)
+        self.setColumnWidth(2, 200)
+        self.setColumnWidth(11, 200)
+        self.setColumnWidth(12, 200)
 
     def show_dialog(self, index):
         if index.column() == 2:
