@@ -62,6 +62,8 @@ class MyFundQSqlTableModel(QSqlTableModel):
                             DontEditDelegate], default_value=0)
     assess_profit = TableField(
         'assess_profit', '预估收益', delegate=[DontEditDelegate], default_value=0)
+    industry = TableField('industry', '行业', default_value=0)
+    remark = TableField('remark', '备注', default_value=0)
 
     def __init__(self, parent=None, db=None):
         super(MyFundQSqlTableModel, self).__init__(parent, db)
@@ -69,8 +71,9 @@ class MyFundQSqlTableModel(QSqlTableModel):
         self.setEditStrategy(self.OnFieldChange)
         for index, column in enumerate(self.columns()):
             self.setHeaderData(index, Qt.Horizontal, column.column_name)
-            for _delegate in column.delegate:
-                self.parent().setItemDelegateForColumn(index, _delegate(self))
+            if column.delegate:
+                for _delegate in column.delegate:
+                    self.parent().setItemDelegateForColumn(index, _delegate(self))
 
         self.setQuery(QSqlQuery(
             'SELECT {} FROM my_fund'.format(
