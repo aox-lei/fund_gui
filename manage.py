@@ -184,10 +184,11 @@ class SyncFundValueThread(QThread):
     def run(self):
         if not self.fund_codes:
             return True
+       
         for i in range(0, len(self.fund_codes), 30):
             fund_code = self.fund_codes[i:i + 30]
+            
             assess_data, gz_time = util.get_fund_assess(fund_code)
-
             self.gz_time.emit(gz_time)
             if assess_data:
                 for v in assess_data:

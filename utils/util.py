@@ -311,7 +311,8 @@ class TtjjWeb(object):
         session = HTMLSession()
         response = session.get(self.HOLD_INFO_URL.format(
             fund_code=fund_code), headers=headers)
-
+        with open('1.html', 'w') as f:
+            f.write(response.text)
         fund_type = response.html.find(
             'div.fr.section > div.head > div.clear > div.fl.w200.dashleft > ul:nth-child(1) > li:nth-child(1)', first=True)
 

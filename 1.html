@@ -1,0 +1,745 @@
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+	持仓明细 _ 基金在线交易平台 _ 天天基金网
+</title><meta http-equiv="Cache-Control" content="no-cache" /><meta http-equiv="Expires" content="-1" /><meta http-equiv="refresh" content="1200" /><meta name="keywords" content="天天基金网,1234567,基金交易,免费开户,基金买卖,基金认购,基金申购,基金定投,基金理财,基金收益查询" /><meta name="description" content="天天基金网（www.1234567.com.cn）是上市公司东方财富旗下专业的基金网站，证监会核准的首批独立基金销售机构。" />
+    <script type="text/javascript">
+        var glo_timestamp = '2021022416190101';
+    </script>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/src/css/page/single.css?2021022416190101" />
+    <style type="text/css">
+        .tipmsg .notifi {
+            width: 1000px;
+        }
+
+        .financial-box table.table-financial .infobtn {
+            margin-right: 10px;
+        }
+
+        .financial-box table.table-financial .daoqi-align {
+            float: left;
+            margin-left: 60px;
+            margin-top: -5px;
+            width: 63px;
+        }
+
+        .financial-box table.table-financial .daoqi-sellbtn {
+            float: left;
+            margin-left: 60px;
+        }
+
+        .financial-box table.table-financial {
+            *border-left: 1px solid #d8d8d8;
+            *border-right: 1px solid #d8d8d8;
+        }
+        /*到期安排样式开始*/
+        .comm-dropdownlist {
+            text-align: left;
+            display: inline-block;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 24px;
+            position: relative;
+            z-index: 999;
+        }
+
+            .comm-dropdownlist,
+            .comm-dropdownlist .ddlist-items {
+                background: #FFFFFF;
+                min-width: 200px;
+                /*comm-dropdownlist减去42*/
+                *width: 158px;
+            }
+
+                .comm-dropdownlist .ddlist-items {
+                    position: absolute;
+                    display: none;
+                }
+
+                .comm-dropdownlist .ddlist-default {
+                    border-radius: 2px;
+                    position: relative;
+                }
+
+                    .comm-dropdownlist .ddlist-default b {
+                        position: absolute;
+                        right: 10px;
+                        top: 50%;
+                        width: 0;
+                        height: 0;
+                        border-left: 6px solid transparent;
+                        border-right: 6px solid transparent;
+                        border-top: 6px solid #CCCCCC;
+                    }
+
+                .comm-dropdownlist .ddlist-default,
+                .comm-dropdownlist .ddlist-value {
+                    padding: 2px 30px 2px 10px;
+                    border: 1px solid #DFDFDF;
+                }
+
+                .comm-dropdownlist .ddlist-value {
+                    border-top: none;
+                }
+
+                .comm-dropdownlist .item-checked {
+                    background: #4A90E2;
+                    border: 1px solid #4A90E2;
+                    border-top: none;
+                    color: #FFFFFF;
+                }
+
+                    .comm-dropdownlist .item-checked div {
+                        color: #FFFFFF;
+                    }
+
+                .comm-dropdownlist .default-checked {
+                    display: block;
+                }
+
+
+                .comm-dropdownlist .the-lable-1 {
+                    font-size: 16px;
+                }
+
+                .comm-dropdownlist .the-lable-2 {
+                    vertical-align: top;
+                    color: #999999;
+                }
+
+        .item-checked .the-lable-2 {
+            color: #FFFFFF;
+        }
+
+        .height-50 {
+            height: 50px;
+        }
+
+        .line-height-50 {
+            line-height: 50px;
+        }
+        /*到期安排样式结束*/
+        /*修改到期处理方式开始*/
+        .gd-dqap-table {
+            width: 100%;
+            border: 1px solid #797979;
+            padding: 10px 20px;
+        }
+
+            .gd-dqap-table .dqap-td-left {
+                text-align: left;
+            }
+
+            .gd-dqap-table .dqap-td-right {
+                text-align: right;
+            }
+
+        .dqap-td-right span {
+            margin-right: 20px;
+        }
+        /*修改到期处理方式结束*/
+
+        table.aui_border td {
+            border-bottom: none;
+            text-align: left;
+        }
+
+        table.aui_dialog th {
+            border-bottom: none;
+            text-align: right;
+            padding: 0;
+        }
+
+        #softkeyboard td {
+            border-bottom: none;
+            padding: 0;
+        }
+
+        input.text {
+            margin: 1px;
+            padding: 2px;
+            vertical-align: middle;
+            background-color: #fff;
+            border-color: #666 #CCC #CCC;
+            border-style: solid;
+            border-width: 1px;
+            font-size: 14px;
+            line-height: 20px;
+            height: 20px;
+        }
+
+        .keyboard_tgt {
+            height: 15px;
+            _height: 15px;
+            width: 21px;
+            background: url(/css/mod/img/keyboard.png) no-repeat left center;
+            cursor: pointer;
+            left: 0px;
+            top: 0px;
+            vertical-align: middle;
+            margin-left: -25px;
+            position: static;
+        }
+
+        .in_bk {
+            display: inline-block;
+            zoom: 1;
+            position: relative;
+        }
+        .change_card {
+            border: 1px solid gray;
+            margin-top: 4px;
+            font-size: 10px;
+            color: gray;
+            width: 73px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="song">
+    <input name="regexsubmitted" type="hidden" id="regexsubmitted" value="abf1aa6d45fc4ad5ac0a230d7e4d37dd" />
+    
+    <div class="headbar">
+        <div class="site-nav clear noprint mbox">
+    <div class="fl login-info">
+        <a href="javascript:void(0)" class="mr10 addFavor">收藏本站</a>|<span class="help_login">
+        <a href="/login" class="ml10 mr10">安全登录</a>
+        <a href="/reg/step1" class="mr10">免费开户</a>
+        <a href="/forgetpwd" target="_blank">忘记密码</a></span>
+    </div>
+    <ul class="fr quick-menu">
+        <li><a href="http://fund.eastmoney.com/?spm=dh" class="red" target="_blank">返回天天基金网</a></li>
+        <li class="mtrade">
+            <div class="menu">
+                <div class="menu-hd menulb" id="Div1"><label>基金交易<!--<span class="hide">（<a title="待确认的交易{0}笔" class="qer waitconfirm" href="../Query/default">0</a>）</span>--></label></div>
+                <div id="Div2" class="menu-bd w hide">
+                    <a href="/MyAssets/Default?spm=S">我的资产</a>
+                    <a href="/xjb/index?spm=S">活期宝</a>
+                    <!--<a href="/dqb/default?spm=S">定期宝</a>-->
+                    <a href="http://fund.eastmoney.com/data/xfdaogou.html?spm=S" target="_blank">买新基金</a>
+                    <a href="/FundtradePage/default2?spm=S">买基金</a>
+                    <a href="/Investment/add?spm=S">基金定投</a>
+                    <a href="/FundtradePage/redemption?spm=S">卖基金</a>
+                </div>
+            </div>
+        </li>
+        <li><a href="http://fund.eastmoney.com/tradeindex.html?spm=dh" target="_blank">基金超市</a></li>
+        <li><a href="http://fund.eastmoney.com/data/funddaogou.html?spm=dh" target="_blank">基金导购</a></li>
+        <li><a href="http://fund.eastmoney.com/favor.html?spm=dh" target="_blank">自选基金</a></li>
+        <li><a href="http://help.1234567.com.cn/?spm=dh" target="_blank">帮助中心</a></li>
+        <li><a href="http://feedback.1234567.com.cn/?spm=dh" target="_blank">提建议</a></li>
+        <li class="mtrade nbr">
+            <div class="menu">
+                <div class="menu-hd menulb" id="Div3"><label class="amore">更多</label></div>
+                <div id="Div4" class="menu-bd hide">
+                    <a href="http://fund.eastmoney.com/fundguzhi.html" target="_blank">基金估值</a>
+                    <a href="http://fund.eastmoney.com/fund.html" target="_blank">基金净值</a>
+                    <a href="http://fund.eastmoney.com/data/fundranking.html" target="_blank">基金排行</a>
+                    <a href="http://fund.eastmoney.com/dingtou/syph_yndt.html" target="_blank">基金定投</a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+    </div>
+    <div class="mbox">
+        <div style="height: 60px; margin: 0 auto;" class="dt_1k_ad">
+            <ul><li><a target="_blank" class="img" title="" href="https://acttg.eastmoney.com/pub/webtg_hskh_act_jjjyy1tz_01_01_01_0"><img alt="" width="332" height="60" src="https://topicimg.1234567.com.cn/product/2018/4/17/afae8cb9-468c-456d-a933-3ea338a127f9.jpg" /></a></li><li><a target="_blank" class="img" title="" href="http://action.1234567.com.cn/2016/xrzx/"><img alt="" width="332" height="60" src="https://img.1234567.com.cn/trade/2018110810401689.gif" /></a></li><li><a target="_blank" class="img" title="" href="http://fund.eastmoney.com/data/xinfund.html"><img alt="" width="332" height="60" src="https://img.1234567.com.cn/trade/2018011216081816.gif" /></a></li></ul>
+
+
+        </div>
+    </div>
+
+    <div class="mbox">
+        
+    </div>
+
+    <div class="mbox">
+        <div class="logframe clear noprint">
+    <div class="logon">
+        <a href="http://fund.eastmoney.com/" class="dc" target="_blank"></a>
+        <a href="/" class="jy" id="quickNav"></a>
+        <!--<a href="/" class="sa"></a>-->
+    </div>
+    <div class="retel mr5">
+        <a href="http://js1.eastmoney.com/tg.aspx?ID=2766" target="_blank">&nbsp;&nbsp;</a>
+    </div>
+    <div class="csline">
+        <span class="tel"><strong class="kfrx">客服热线：</strong>95021 / 400-1818-188</span>
+        <span class="work">工作日：7:30-21:30 双休日：9:00-21:30</span>
+    </div>
+    <div class="fwrx mr5">
+        <a href="http://feedback.1234567.com.cn/" class="advise" title="意见反馈" target="_blank"></a>
+    </div>
+</div>
+
+    </div>
+
+    <div class="mbox">
+        <div class="clear navmenu">
+    <!--<div class="navpr"><a href="https://caifujie.1234567.com.cn/Activity/packet" class="ad_tip pa" target="_blank"></a></div>-->
+    <div class="lbder"></div>
+    <ul class="mcont">
+        <li class="myassets">
+            <span><a class="fata" href="/MyAssets/default">我的账户</a></span>
+            <dl class="msub zc myassets spc hide">
+                <dd id="myassets_default"><a href="/MyAssets/default">资产概览</a></dd>
+                <dd id="myassets_hold"><a href="/MyAssets/hold">持仓明细</a></dd>
+                <dd id="myassets_couponlist"><a href="/MyAssets/couponlist">我的卡券</a></dd>
+                <dd id="myassets_securies"><a href="/MyAssets/securies">安全中心</a></dd>
+                <dd id="myassets_changepwd"><a href="/MyAssets/changepwd">密码修改</a></dd>
+                <dd id="myassets_info"><a href="/MyAssets/info">个人信息管理</a></dd>
+                <dd id="myassets_bankcard"><a href="/MyAssets/bankcard">银行卡管理</a></dd>
+                <dd id="myassets_risk"><a href="/MyAssets/risk">风险评测</a></dd>
+                <dd><a href="http://fundact.eastmoney.com/safety/" target="_blank">安全保障</a></dd>
+            </dl>
+        </li>
+        <li class="xjb">
+            <!--<img class="coincashbag" src="/images/coin.gif" style="position:absolute;left:37px;top:-14px;z-index:1000;margin:0 auto;" />-->
+            <span><a class="fata" href="/xjb/index">活期宝</a></span>
+            <dl class="msub hide xjb spc">
+                <dd id="xjb_index"><a href="/xjb/index">首页</a></dd>
+                <dd id="xjb_recharge"><a href="/xjb/recharge">充值</a></dd>
+                <dd id="xjb_withdrawcash"><a href="/xjb/withdrawcash#cq" way="comm" class="special hand">取现</a></dd>
+                <dd id="investment_addbag"><a href="/Investment/default">定期充值</a></dd>
+                <dd id="xjb_buy"><a href="/FundtradePage/default2">买基金</a></dd>
+                <dd id="xjb_transfer"><a href="/xjb/transfer" style="color:#dc0000;">活期宝互转</a></dd>
+                <dd id="xjb_cancel"><a href="https://query.1234567.com.cn/#t_0;bt_0;s_5;ft_0">撤单</a></dd>
+                <dd id="xjb_traderecord"><a href="https://query.1234567.com.cn/">交易记录</a></dd>
+                <dd><a href="http://fund.eastmoney.com/tools/huoqibao.html" target="_blank" style="_margin-top:5px;"><b class="bag-tool-icon"></b>活期宝小工具</a></dd>
+            </dl>
+        </li>
+        <!--<li class="dqb">
+            <span><a class="fata" href="/dqb/default">定期宝</a></span>
+            <dl class="msub hide dqb spc">
+                <dd id="dqb_default"><a href="/dqb/default">首页</a></dd>
+                <dd id="dqb_recharge"><a href="/dqb/recharge">存款</a></dd>
+                <dd id="dqb_withdrawcash"><a href="/dqb/withdrawcash">取款&nbsp;/&nbsp;预约取款</a></dd>
+                <dd id="dqb_cancel"><a href="https://query.1234567.com.cn/#t_0;bt_0;s_5;ft_0">撤单</a></dd>
+                <dd id="dqb_query"><a href="https://query.1234567.com.cn/">交易查询</a></dd>
+            </dl>
+        </li>-->
+        <li class="zsb">
+            <span><a class="fata" href="/zsb/default">指数宝</a></span>
+            <dl class="msub hide zsb spc">
+                <dd id="zsb_default"><a href="/zsb/default">首页</a></dd>
+                <dd id="zsb_recharge"><a href="/zsb/default#appoint">买入</a></dd>
+                <dd id="zsb_withdrawcash"><a href="/zsb/withdrawcash">卖出</a></dd>
+                <dd id="zsb_transform"><a href="/FundtradePage/transform">转换</a></dd>
+                <dd id="zsb_cancel"><a href="https://query.1234567.com.cn/#t_0;bt_0;s_5;ft_0">撤单</a></dd>
+                <dd id="zsb_query"><a href="https://query.1234567.com.cn/">交易查询</a></dd>
+            </dl>
+        </li>
+        <li class="help">
+            <span><a class="fata" href="http://js1.eastmoney.com/tg.aspx?ID=3777" target="_blank">私募宝</a></span>
+        </li>
+        <li class="fundtradepage">
+            <span><a class="fata" href="/FundtradePage/index">基金产品</a></span>
+            <dl class="msub jy hide fundtradepage">
+                <dd id="fundtradepage_index"><a href="/FundtradePage/index">首页</a></dd>
+                <dd><a href="http://fund.eastmoney.com/trade/">收益排行</a></dd>
+                <dd id="fundtradepage_default2"><a href="/FundtradePage/default2">买基金</a></dd>
+                <dd id="fundtradepage_redemption"><a href="/FundtradePage/redemption">卖基金</a></dd>
+                <dd id="fundtradepage_transform"><a href="/FundtradePage/transform">转换</a></dd>
+                <dd id="fundtradepage_default"><a href="http://fund.eastmoney.com/data/xfdaogou.html" target="_blank">买新基金</a></dd>
+                <dd id="fundtradepage_out2in"><a href="/FundtradePage/out2in">场外转场内</a></dd>
+                <dd id="fundtradepage_cancel"><a href="https://query.1234567.com.cn/#t_0;bt_0;s_5;ft_0">撤单</a></dd>
+                <dd id="fundtradepage_dividends"><a href="/FundtradePage/dividends">修改分红方式</a></dd>
+            </dl>
+        </li>
+        <li class="fundfilter">
+            <span><a class="fata" target="_blank" href="http://fund.eastmoney.com/daogou/?spm=dh"><b></b>基金导购</a></span>
+            <dl class="msub hide">
+                <dd><a href="http://fund.eastmoney.com/daogou/" target="_blank">全部基金</a></dd>
+                <dd><a href="http://fund.eastmoney.com/trade/">收益排行</a></dd>
+                <dd><a href="http://fund.eastmoney.com/fundhot8.html#spm=S" target="_blank" style="color:#cc3333;">热销基金</a></dd>
+                <dd><a href="http://fund.eastmoney.com/topic1.html#spm=S" target="_blank">优选基金</a></dd>
+                <dd><a href="http://fund.eastmoney.com/tradeindex.html#spm=S" target="_blank">基金超市</a></dd>
+                <dd><a href="http://fund.eastmoney.com/trade/hb.html#spm=S" target="_blank">货币型基金</a></dd>
+                <dd><a href="http://fund.eastmoney.com/trade/lc.html#spm=S" target="_blank">理财型基金</a></dd>
+                <dd><a href="http://fund.eastmoney.com/data/xfdaogou.html#spm=S" target="_blank">新发基金</a></dd>
+                <dd><a href="http://fund.eastmoney.com/data/funddaogou_hd.html#spm=S" target="_blank">后端申购基金</a></dd>
+            </dl>
+        </li>
+        <li class="investment">
+            <span><a class="fata" href="/Investment/default">基金定投</a></span>
+            <dl class="msub dt hide investment">
+                    <dd id="investment_default"><a href="/Investment/default">我的定投计划</a></dd>
+                    <dd id="investment_add"><a href="/Investment/add">新增定投</a></dd>
+                    <!--<dd id="investment_closequery"><a href="/Investment/closequery">定投终止查询</a></dd>-->
+                    <dd id="investment_cancel"><a href="https://query.1234567.com.cn/#t_0;bt_0;s_5;ft_0">撤单</a></dd>
+            </dl>
+        </li>
+        <!--        <li class="financial"><span><a class="fata" href="http://fund.eastmoney.com/trade/financial.html">券商集合理财</a></span>
+                    <dl class="msub dt hide financial spc">
+                            <dd id="Dd1"><a href="http://fund.eastmoney.com/trade/financial.html">全部列表</a></dd>
+                    </dl>
+                </li>
+                <li class="speciality"><span><a class="fata" href="http://fund.eastmoney.com/trade/fundaccounts.html">基金专户</a></span>
+                    <dl class="msub dt hide financial">
+                            <dd id="Dd4"><a href="http://fund.eastmoney.com/trade/fundaccounts.html">全部产品</a></dd>
+                    </dl>
+                </li>-->
+        <li class="faturl financial">
+            <span><a class="fata" href="/financial/default">高端理财</a></span>
+            <dl class="msub dt financial hide">
+				<dd id="financial_default"><a href="/financial/default">首页</a></dd>
+				<dd id="Dd1"><a href="http://fund.eastmoney.com/gaoduan/" target="_blank">全部产品</a></dd>
+				<dd id="Dd4"><a href="http://fund.eastmoney.com/gaoduan/paihang.html" target="_blank">排行榜</a></dd>
+				<dd id="financial_purchase"><a href="http://fund.eastmoney.com/gaoduan/" target="_blank">买入</a></dd>
+				<dd id="financial_redeem"><a href="/financial/redeem">卖出&nbsp;/&nbsp;预约卖出</a></dd>
+				<dd id="financial_cancel"><a href="https://query.1234567.com.cn/#t_0;bt_0;s_5;ft_0">撤单</a></dd>
+				<dd id="financial_query"><a href="https://query.1234567.com.cn/">交易查询</a></dd>
+            </dl>
+        </li>
+        <li class="query">
+            <span><a class="fata" href="https://query.1234567.com.cn/">交易查询</a></span>
+            <dl class="msub cx hide query">
+                <dd id="Dd2"><a href="https://query.1234567.com.cn/">活期宝交易查询</a></dd>
+                <!--<dd id="Dd3"><a href="https://query.1234567.com.cn/">定期宝交易查询</a></dd>-->
+                <dd id="Dd5"><a href="https://query.1234567.com.cn/">指数宝交易查询</a></dd>
+                <dd id="Dd6"><a href="/xjb/orderlist">我的预约记录</a></dd>
+                <dd id="query_default"><a href="https://query.1234567.com.cn/">基金交易查询</a></dd>
+                <dd id="query_bill"><a href="/Query/bill">我的对账单</a></dd>
+                <dd id="query_assetprove"><a href="/Query/assetprove">资产证明</a></dd>
+                <dd id="query_log"><a href="/Query/log">账户操作日志</a></dd>
+            </dl>
+        </li>
+        <!--<li class="help">
+            <span><a class="fata" href="/MyAssets/switcher" target="_blank">中财所</a></span>
+        </li>-->
+        <li class="help last">
+            <span><a class="fata" href="http://help.1234567.com.cn/" target="_blank">帮助中心</a></span>
+        </li>
+
+        <!--<li class="safety last"><span><a class="fata" href="http://fundact.eastmoney.com/safety/" target="_blank" >安全保障</a></span>
+           <dl class="msub cx hide safety">
+                   <dd id="safety"><a href="http://fundact.eastmoney.com/safety/"  target="_blank">安全保障</a></dd>
+           </dl>
+        </li> -->
+    </ul>
+    <div class="rbder"></div>
+</div>
+    </div>
+
+    <div class="mbox">
+        <div class="mbody clear">
+             <!--published at 10.222.20.12 -->
+ <!--current version v2.0.4.7 -->
+<!--<div class="chead">快速通道</div>
+<div class="cbody">
+    <ul class="sideMenu">
+        <li class="myassets_default"><b class="asset"></b><a href="/MyAssets/default">我的资产</a></li>
+        <li class="myassets_hold"><b class="mhold"></b><a href="/MyAssets/hold">持仓明细</a></li>
+        <li class="xjb_index"><b class="xjb"></b><a href="/xjb/index" style="color:#dc0000">活期宝</a></li>
+        <li class="dqb_default"><b class="dqb"></b><a href="/dqb/default">定期宝</a></li>
+        <li class="zsb_default"><b class="zsb"></b><a href="/zsb/default">指数宝</a></li>
+        <li class="cluster_default"><b class="cluster"></b><a href="/Cluster/default">组合宝</a></li>
+        <li><b class="funddaogou"></b><a href="http://fund.eastmoney.com/data/funddaogou.html" target="_blank">基金导购</a></li>
+        <li><b class="fundrating"></b><a href="http://fund.eastmoney.com/trade/pg.html#6y;desc" target="_blank" style="background:url('/image/hot.gif') no-repeat 120px center;">基金排行</a></li>
+        <li class="fundtradepage_favor"><b class="favor"></b><a href="http://fund.eastmoney.com/favor/" target="_blank">自选基金</a></li>
+        <li class="fundtradepage_default"><b class="newfund"></b><a href="http://fund.eastmoney.com/data/xfdaogou.html" target="_blank">买新基金</a></li>
+        <li class="fundtradepage_default2"><b class="fundbuy"></b><a href="/FundtradePage/default2">买基金</a></li>
+        <li class="fundtradepage_redemption"><b class="fundsell"></b><a href="/FundtradePage/redemption">卖基金</a></li>
+        <li class="investment_add"><b class="funddingtou"></b><a href="/Investment/add">基金定投</a></li>
+        <li class="fundtradepage_transform"><b class="fundtransform"></b><a href="/FundtradePage/transform">基金转换</a></li>
+        <li class="fundtradepage_cancel"><b class="tradecancle"></b><a href="/FundtradePage/cancel">交易撤单</a></li>
+        <li class="query_default"><b class="tradequery"></b><a href="https://query.1234567.com.cn/">交易查询</a></li>
+        <li class="xjb_orderlist"><b class="orderlist"></b><a href="/xjb/orderlist">我的预约记录</a></li>
+        <li class="fundtradepage_dividends"><b class="funddivident"></b><a href="/FundtradePage/dividends">基金分红设置</a></li>
+        <li class="myassets_bankcard"><b class="bankcard"></b><a href="/MyAssets/bankcard">银行卡管理</a></li>
+    </ul>
+</div>-->
+<div class="left-nav-box">
+    <div class="left-nav">
+        <ul>
+            <li class="-nav-myassets-default"><a href="/MyAssets/default" class="nav-menu"><b></b>我的资产</a></li>
+            <li>
+                <a href="/MyAssets/hold" class="nav-menu"><b class="close">+</b>我的持仓</a>
+                <p class="hide submenu">
+                    <a href="/MyAssets/hold" class="-nav-myassets-hold"><i>●</i>全部基金</a>
+                    <a href="/xjb/index" class=""><i>●</i>活期宝</a>
+                    <!--<a href="/myassets/hold?index=dqb" class="-nav-dqb-default"><i>●</i>定期宝</a>-->
+                    <a href="/myassets/hold?index=zsb" class="-nav-zsb-default"><i>●</i>指数宝</a>
+                    <!--<a href="/Cluster/default" class="-nav-cluster-default"><i>●</i>组合宝</a>-->
+                    <!--<a href="/myassets/hold?index=fundtradepage" class="-nav-fundtradepage-index"><i>●</i>普通基金</a>-->
+                    <a href="/myassets/hold?index=financial" class="-nav-financial-default"><i>●</i>高端理财</a>
+                    <a href="/InvestAsset/default" class="-nav-investasset-default"><i>●</i>投顾资产</a>
+                </p>
+            </li>
+            <li>
+                <a href="/XJB/index" class="nav-menu"><b class="close">+</b>我的活期宝</a>
+                <p class="hide submenu">
+                    <a href="/XJB/index" class="-nav-xjb-index"><i>●</i>明细</a>
+                    <a href="/xjb/recharge" class="-nav-xjb-recharge"><i>●</i>充值</a>
+                    <a href="/xjb/withdrawcash#cq" class="-nav-xjb-withdrawcash"><i>●</i>取现</a>
+                    <a href="/xjb/transfer" class="-nav-xjb-transfer"><i>●</i>互转</a>
+                    <a href="/xjb/cancel" class="-nav-xjb-cancel"><i>●</i>撤单</a>
+                </p>
+            </li>
+            <li>
+                <a href="/FundtradePage/default2" class="nav-menu"><b class="close">+</b>基金交易</a>
+                <p class="-submenu-default hide submenu">
+                    <a href="/FundtradePage/default2" class="-nav-fundtradepage-default2"><i>●</i>买基金</a>
+                    <a href="http://fund.eastmoney.com/trade/xf.html" target="_blank" class="-nav-fundtradepage-default"><i>●</i>买新基金</a>
+                    <a href="/FundtradePage/redemption" class="-nav-fundtradepage-redemption"><i>●</i>卖基金</a>
+                    <a href="/FundtradePage/transform" class="-nav-fundtradepage-transform"><i>●</i>基金转换</a>
+                    <a href="/FundtradePage/dividends" class="-nav-fundtradepage-dividends"><i>●</i>分红设置</a>
+                    <a target="_blank" href="https://query.1234567.com.cn/#t_0;bt_0;s_5;ft_0" class="-nav-fundtradepage-cancel"><i>●</i>交易撤单</a>
+                    <a href="/FundtradePage/out2in" class="-nav-fundtradepage-out2in"><i>●</i>场外转场内</a>
+                </p>
+            </li>
+            <li>
+                <a href="/Investment/default" class="nav-menu"><b class="close">+</b>基金定投</a>
+                <p class="hide submenu">
+                    <a href="/Investment/default" class="-nav-investment-default"><i>●</i>定投计划</a>
+                    <a href="/Investment/add" class="-nav-investment-add"><i>●</i>新增定投</a>
+                </p>
+            </li>
+            <li>
+                <a href="https://query.1234567.com.cn/" target="_blank" class="nav-menu"><b class="close">+</b>交易查询</a>
+                <p class="hide submenu">
+                    <a href="https://query.1234567.com.cn/" target="_blank" class=""><i>●</i>交易记录</a>
+                    <a href="/xjb/orderlist" class="-nav-xjb-orderlist"><i>●</i>预约记录</a>
+                    <a href="/Query/bill" class="-nav-query-bill" target="_blank"><i>●</i>我的对账单</a>
+                    <a href="/Query/assetprove" class="-nav-query-assetprove" target="_blank"><i>●</i>资产证明</a>
+                </p>
+            </li>
+            <li>
+                <a href="/MyAssets/bankcard" class="nav-menu"><b class="close">+</b>账户管理</a>
+                <p class="hide submenu">
+                    <a href="/MyAssets/bankcard" class="-nav-myassets-bankcard"><i>●</i>银行卡管理</a>
+                    <a href="/MyAssets/couponlist" class="-nav-myassets-couponlist"><i>●</i>我的卡券</a>
+                    <a href="/MyAssets/info" class="-nav-myassets-info"><i>●</i>个人信息</a>
+                    <a href="/MyAssets/securies" class="-nav-myassets-securies"><i>●</i>安全中心</a>
+                    <a href="/MyAssets/changepwd" class="-nav-myassets-changepwd"><i>●</i>修改密码</a>
+                    <a href="/MyAssets/risk" class="-nav-myassets-risk"><i>●</i>风险评测</a>
+                    <a href="/Query/log" class="-nav-query-log"><i>●</i>账户操作日志</a>
+					<a href="/Financial/AssetsCertification" class="-nav-financial-assetscertification"><i>●</i>资产收入证明</a>
+                </p>
+            </li>
+        </ul>
+    </div>
+    <div class="lefttonglan">
+        <ul><li><a target="_blank" class="img" title="" href="http://fund.eastmoney.com/gaoduan/?spm=002.t.053"><img alt="" width="172" height="90" src="https://img.1234567.com.cn/trade/2015030311010830.gif" /></a></li><li><a target="_blank" class="img" title="" href="http://fund.eastmoney.com/fundhot8.html?spm=002.t.054"><img alt="" width="172" height="90" src="https://img.1234567.com.cn/trade/2015041316261730.gif" /></a></li><li><a target="_blank" class="img" title="" href="http://fundzt.eastmoney.com/2018/xfjj/pc/?spm=002.t.063"><img alt="" width="172" height="90" src="https://img.1234567.com.cn/trade/2015092111125691.gif" /></a></li></ul>
+
+
+    </div>
+</div>
+
+
+            <!-- 单品页内容区域 start -->
+
+            <div class="fr section">
+                <div class="title">
+                    <h4><strong>持仓详情</strong></h4>
+                    <span class="ft">收益更新时间：2021-03-11 20:22</span>
+                </div>
+
+                <!-- 显示提示信息区域  -->
+                
+                <div id="fhsp" class="online hide"><b class="img"></b>该基金最近有分红/折算，期间每日盈亏可能与真实盈亏有偏差，数据仅供参考。&nbsp;<a href="http://fund.eastmoney.com/f10/fhsp_001938.html" target="_blank">详情</a></div>
+
+                <!-- 头部区域 start -->
+                <div class="head">
+                    <!-- 权益类基本信息区域 start -->
+                    
+                        <!-- 显示基金名称区域 start -->
+                        <div class="h40 lh40">
+                            <h4 class="title2"><a href="http://fund.eastmoney.com/001938.html" target="_blank">中欧时代先锋股票A(001938)</a></h4>
+                            <span style="float: right; margin-left: 16px;">限大额&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;开放赎回</span>
+                            <span style="float: right">最新净值：<strong class="fcblack numbergray14">1.8394</strong>(03-11)&nbsp;&nbsp;
+                                日增长率：<span class="red number14">2.61%</span>
+                            </span>
+                        </div>
+                        <!-- 显示基金名称区域 end -->
+
+                        <!-- 显示基金资金与累计盈亏区域 start -->
+                        <div class="clear" style="background-color: #f5f9ff; padding: 20px 0px">
+                            <div class="balance">
+                                <div class="h15"><span>资金（元）</span></div>
+                                <div class="h20"><span class="ft w220">持仓份额(份)：<span class="numbergray14">21746.34</span></span></div>
+                                <div class="h20">
+                                    <span><strong class="numberbig fcblack">&nbsp;&nbsp;40,000.21</strong></span>
+                                    <span class="ft w220">可用份额(份)：<span class="numbergray14">21746.34</span></span>
+                                </div>
+                                <hr />
+                                <div class="h15"><span>持仓盈亏（元）</span></div>
+                                <div class="h20"><span class="ft w220">持仓盈亏率：<span class="number14 green">-4.80%</span></span></div>
+                                <div class="h20">
+                                    <!--  累计盈亏金额 -->
+                                    <strong class="green numberbig">&nbsp;&nbsp;-2,016.31</strong>
+                                    <span class="ft w220">
+                                        <span id="tanbaodanjia">摊薄单价(元)：<span class="number14">1.9322</span></span>
+                                        <span id="tanbaochengben" class="hide">摊薄成本(元)：<span class="number14">42016.52</span></span>
+                                        <a id="tanbaobutton" href="javascript:" class="pdleft underline">切换</a></span>
+                                </div>
+                            </div>
+                            <!-- 显示基金资金与累计盈亏区域 end -->
+
+                            <!-- 显示基金类型，收费方式等区域 start -->
+                            <div class="fl w200 dashleft">
+                                <ul>
+                                    <li>基金类型：股票型</li>
+                                    <li class="mrtop7">收费方式：前端收费&nbsp;<a href="http://fund.eastmoney.com/f10/jjfl_001938.html" target="_blank">详情</a></li>
+                                    <li class="mrtop7">分红方式：现金分红&nbsp;<a href="/FundtradePage/dividends?fc=001938"  target="_blank">修改</a></li>
+                                </ul>
+                                <ul class="mrtop20">
+                                    <li class="mrtop7"><b class="textIcon">极</b><a href="http://help.1234567.com.cn/question_834.html" target="_blank">支持极速回活期宝</a></li><li class="mrtop7"><b class="textIcon">转</b><a href="http://help.1234567.com.cn/question_837.html" target="_blank">支持超级转换</a></li>
+                                </ul>
+                            </div>
+                            <!-- 显示基金类型，收费方式等区域 end -->
+
+                            <!-- 显示基金操作区域 start -->
+                            <div class="fl w80">
+                                <ul class="button">
+                                    <li id="buy" class="bgred"><a href="/FundtradePage/default2?fc=001938" style="color:white">买入</a></li><li class="mrtop10"><a href="/FundtradePage/redemption?fc=001938&spm=S">卖出</a></li><li class="mrtop10"><a href="/Investment/add?fc=001938">定投</a></li><li class="mrtop10"><a href="/FundtradePage/transform?fc=001938&spm=S">转换</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- 显示基金操作区域 end -->
+                    
+                    <!-- 权益类基本信息区域 end -->
+
+                    <!-- 货币类基本信息区域 start -->
+                    
+                    <!-- 货币类基本信息区域 end -->
+
+                    <!-- 高端理财固定收益类基本信息区域 start -->
+                    
+                    <!-- 高端理财固定收益类基本信息区域 end -->
+
+                </div>
+                <!-- 头部区域 end -->
+
+
+                <!-- 中部图表区域 start -->
+                
+                    <div style="margin-top: 116px;">
+                        <ul id="ui-nav" class="nav-right list-inline">
+                            <li class="first">
+                                <span style="cursor: pointer" data-buttontype="time" data-type="1">近一周<i class="ico-down"></i></span>
+                                <dl class="more1">
+                                    <dt data-type="1" data-buttontype="time">近一周</dt>
+                                    <dt data-type="2" data-buttontype="time">近一月</dt>
+                                </dl>
+                            </li>
+                            <li class="last">
+                                <span style="cursor: pointer" data-buttontype="profit" data-type="1">持仓盈亏<i class="ico-down"></i></span>
+                                <dl class="more2">
+                                    <dt data-type="1" data-buttontype="profit">持仓盈亏</dt>
+                                    <dt data-type="2" data-buttontype="profit">日盈亏</dt>
+                                </dl>
+                            </li>
+                        </ul>
+                        <div id="RightChart" class="middle" style="clear: both; position: relative;">
+                        </div>
+
+                    </div>
+                
+                <!-- 中部图表区域 end -->
+
+                <!-- 底部盈亏，份额详情表格区域 start -->
+                <div class="bottom mrtop20">
+                    <!-- 刷选Tab start -->
+                    
+                    <ul><li data-type="2">份额详情<span class="mr split">|</span></li><li data-type="3">每日盈亏<span class="mr split">|</span></li><li data-type="4">定投计划<span class="mr split">|</span></li><li><a href="https://query.1234567.com.cn/?spm=S#t_3;bt_0;s_0;fc_001938" target="_blank">交易记录</a><span class="mr split"></span></li></ul>
+                    <!-- 刷选Tab end -->
+
+                    <!-- 表格内容 start -->
+                    <div id="data">
+                    </div>
+                    <!-- 表格内容 end -->
+
+                </div>
+                <!-- 底部盈亏，份额详情表格区域 end -->
+
+
+                <!-- 底部帮助信息区域 start -->
+                <div>
+    <h3 class="Intro">帮助信息</h3>
+    <div class="ui-intro clearfix">
+        <ul>
+            <li>●&nbsp;&nbsp;&nbsp;&nbsp;资金=当前产品持仓市值+在途买入金额（在途买入包括使用活期宝、银行卡购买、定投、及通过超级转换业务转入基金的金额）。</li>
+            <li>●&nbsp;&nbsp;&nbsp;&nbsp;持仓盈亏（收益）、摊薄成本、摊薄单价根据持仓摊薄法计算，<a href="http://help.1234567.com.cn/question_877.html" target="_blank">点此查看具体计算规则</a>。</li>
+            <li>●&nbsp;&nbsp;&nbsp;&nbsp;每日盈亏数据根据净值变动进行估算。数据仅供参考，实际收益情况以基金公司确认结果为准。</li>
+            <li>●&nbsp;&nbsp;&nbsp;&nbsp;以上数据自您开始持有当前产品起计算；当您赎回该产品全部份额后，当前持有产品收益将清零。</li>
+            <li>●&nbsp;&nbsp;&nbsp;&nbsp;货币、理财型产品的未付收益由公开行情信息估算得到，部分产品周末及节假日收益数据可能会延迟至节后交易日更新，实际以基金公司结转收益为准。</li>
+        </ul>
+    </div>
+</div>
+                <!-- 底部帮助信息区域 end -->
+
+
+                <div>
+                </div>
+            </div>
+
+
+            <!--修改到期处理方式-->
+            
+            <!-- 单品页内容区域 end -->
+
+            <div id="messageInfo" style="display: none">
+                <p id="messageContext" style="text-align: center; margin: 30px 0;">
+                </p>
+                <p style="height: 50px; line-height: 60px; text-align: center; margin-bottom: 40px;">
+                    <a id="okabt" style="cursor: pointer; display: inline-block; text-align: center; line-height: 38px; width: 138px; height: 38px; background: none; font-size: 14px; font-weight: bold; border: 1px solid #ddd; background-color: #4372ba; border-color: #4372ba; color: #fff; text-decoration: none;" href="javascript:;">确定</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="mbox">
+        <div class="copyright cp2">
+            <style>
+    .cp2 ul.offices li {
+        width: 230px !important;
+    }
+</style>
+<ul class="offices clear">
+<li><a href="http://help.1234567.com.cn/aboutus/licenses.html" target="_blank"><span>基金销售资格</span><b class="icon-xszg" title="基金销售资格"></b></a></li>
+<li><a href="http://help.1234567.com.cn/aboutus/licenses.html#ZJH" target="_blank"><span>监督机构</span><b class="icon-jdjg" title="中国证券监督管理委员会"></b></a></li>
+<li><a href="http://help.1234567.com.cn/aboutus/licenses.html#JGYH" target="_blank"><span>监管银行</span><b class="icon-jgyh" title="中国民生银行"></b></a></li>
+<li class="last"><a href="http://help.1234567.com.cn/aboutus/licenses.html#HYZS" target="_blank"><span>自律组织</span><b class="icon-zlzz" title="中国证券投资基金业协会"></b></a></li>
+<!--<li class="last"><a href="https://sealsplash.geotrust.com/splash?&dn=*.1234567.com.cn" target="_blank"><span>安全认证</span><b style="width:120px;" class="icon-aqrz" title="GEOTRUST"></b></a></li>-->
+</ul>
+<div class="cpright">
+<p><a href="http://help.1234567.com.cn/aboutus/about.html" target="_blank">关于我们</a><span>|</span><a href="http://help.1234567.com.cn/aboutus/licenses.html" target="_blank">资质证明</a><span>|</span><a href="http://fundact.eastmoney.com/ttjjyjzx/" target="_blank">研究中心</a><span>|</span><a href="http://help.1234567.com.cn/aboutus/sellerteam.html" target="_blank">销售团队</a><span>|</span><a href="http://help.1234567.com.cn/aboutus/connect.html" target="_blank">联系我们</a><span>|</span><a href="http://help.1234567.com.cn/aboutus/security_guid.html" target="_blank">安全指引</a><span>|</span><a href="http://help.1234567.com.cn/aboutus/relief.html" target="_blank">免责条款</a><span>|</span><a href="http://help.1234567.com.cn/aboutus/risktips.html" target="_blank">风险提示函</a><span>|</span><a href="http://feedback.1234567.com.cn/" target="_blank">意见建议</a></p>
+<p class="cp">天天基金客服热线：95021 / 4001818188<span>|</span>客服邮箱：<a href="mailto:vip@1234567.com.cn" target="_blank">vip@1234567.com.cn</a><span>|</span>人工服务时间：工作日 7:30-21:30 双休日 9:00-21:30<br />郑重声明：<a class="footFundCertLink" href="http://help.1234567.com.cn/aboutus/licenses.html" target="_blank">天天基金系证监会批准的基金销售机构[000000303]</a>。天天基金网所载文章、数据仅供参考，使用前请核实，风险自负。<br />中国证监会上海监管局网址：<a href="http://www.csrc.gov.cn/pub/shanghai/">www.csrc.gov.cn/pub/shanghai</a><br />CopyRight&nbsp;&nbsp;上海天天基金销售有限公司&nbsp;&nbsp;<!--2011-2021&nbsp;&nbsp;-->沪ICP证：沪B2-20130026&nbsp;&nbsp;<a target="_blank" href="https://beian.miit.gov.cn">网站备案号:沪ICP备11042629号-1</a><br /><br /></p>
+</div>
+<!--<script type='text/javascript' src='/js/session/session1.js'></script>-->
+<script src="https://img.1234567.com.cn/counter.js"></script>
+<script src="https://img.1234567.com.cn/libs/emtj_tracker.min.js"></script>
+        </div>
+    </div>
+    <script type="text/javascript" src="/src/js/sea.js"></script>
+    <script type="text/javascript">
+        var FundCode="001938";
+        var xArray_line_7=["03-03","03-04","03-05","03-08","03-09","03-10","03-11"];
+        var yArray_line_7=[986.86,-865.93,-1181.25,-2657.82,-3542.9,-3034.04,-2016.31];
+        var xArray_line_30=["01-22","01-25","01-26","01-27","01-28","01-29","02-01","02-02","02-03","02-04","02-05","02-08","02-09","02-10","02-18","02-19","02-22","02-23","02-24","02-25","02-26","03-01","03-02","03-03","03-04","03-05","03-08","03-09","03-10","03-11"];
+        var yArray_line_30=[3116.71,3324.99,2697.63,3062.55,1922.87,1692.84,2124.27,2889.41,2693.67,2626.45,1956.22,3431.15,4372.77,5353.53,5205.65,4392.34,2978.83,2526.5,895.53,904.23,80.04,765.05,254.01,986.86,-865.93,-1181.25,-2657.82,-3542.9,-3034.04,-2016.31];
+
+        var xArray_column_7=["03-03","03-04","03-05","03-08","03-09","03-10","03-11"];
+        var yArray_column_7=[732.85,-1852.79,-315.33,-1476.58,-885.08,508.86,1017.72];
+        var xArray_column_30=["01-22","01-25","01-26","01-27","01-28","01-29","02-01","02-02","02-03","02-04","02-05","02-08","02-09","02-10","02-18","02-19","02-22","02-23","02-24","02-25","02-26","03-01","03-02","03-03","03-04","03-05","03-08","03-09","03-10","03-11"];
+        var yArray_column_30=[421.58,208.28,-627.37,364.91,-1139.68,-230.03,431.43,765.13,-195.74,-67.23,-670.24,1474.93,941.61,980.75,-147.88,-813.32,-1413.52,-452.33,-1630.98,8.69,-824.19,685,-511.04,732.85,-1852.79,-315.33,-1476.58,-885.08,508.86,1017.72];
+        seajs.config({
+            charset: 'utf-8',
+            timeout: 20000,
+            debug: false,
+            'map': [
+				[/^(.*\.(?:css|js))(.*)$/i, '$1?' + 2021022416190101]
+            ]
+        });
+        seajs.use("/src/js/page/single.js?t=2021022416190101", function (hold) {
+            hold.hold();
+        });
+    </script>
+    
+    <script src="https://img.1234567.com.cn/trade/js/rightDA.js?150622"></script>
+</body>
+</html>
