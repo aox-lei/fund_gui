@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "fund_gui"
+version = "0.1.0"
+description = ""
+authors = ["aox.lei <2387813033@qq.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.7,<3.9"
+QDarkStyle = "^3.0.2"
+peewee = "^3.14.4"
+requests-html = "^0.10.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
