@@ -4,11 +4,18 @@ version = "0.1.0"
 description = ""
 authors = ["aox.lei <2387813033@qq.com>"]
 
+[[tool.poetry.source]]
+name = "aliyun"
+url = "https://mirrors.aliyun.com/pypi/simple/"
+default = true
+
 [tool.poetry.dependencies]
 python = ">=3.7,<3.9"
 QDarkStyle = "^3.0.2"
 peewee = "^3.14.4"
 requests-html = "^0.10.0"
+PySide2 = "5.14.2.3"
+akshare = "^0.9.69"
 
 [tool.poetry.dev-dependencies]
 
