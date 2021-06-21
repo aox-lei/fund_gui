@@ -16,6 +16,7 @@ peewee = "^3.14.4"
 requests-html = "^0.10.0"
 PySide2 = "5.14.2.3"
 akshare = "^0.9.69"
+pyecharts = "^1.9.0"
 
 [tool.poetry.dev-dependencies]
 
