@@ -28,7 +28,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.line_search.set_completer_callback(self.search_completer)
 
         self.ttjj_web = util.TtjjWeb()
-        self.check_login()
+        # self.check_login()
 
         self.connect_db()
         self.table_fund.setDb(self.db)
@@ -67,7 +67,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             cookie += '{}={};'.format(k, v)
         with open(COOKIE_PATH, 'w') as f:
             f.write(cookie)
-        self.check_login()
+        # self.check_login()
 
     def get_cookie(self):
         if not COOKIE_PATH.exists():
