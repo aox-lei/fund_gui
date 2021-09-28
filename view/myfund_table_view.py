@@ -129,14 +129,14 @@ class ChartsDialog(Ui_Dialog, QDialog):
         line.add_yaxis('单位净值', data,
                        tooltip_opts=opts.TooltipOpts(formatter=JsCode(js_code)))
 
-        line.add_yaxis('m5', df['m5'].tolist(),
-                       is_symbol_show=True, is_smooth=True)
+        # line.add_yaxis('m5', df['m5'].tolist(),
+        #                is_symbol_show=True, is_smooth=True)
         line.add_yaxis('m10', df['m10'].tolist(),
                        is_symbol_show=True, is_smooth=True)
-        line.add_yaxis('m15', df['m15'].tolist(),
-                       is_symbol_show=True, is_smooth=True)
-        # line.add_yaxis('m20', df['m20'].tolist(),
+        # line.add_yaxis('m15', df['m15'].tolist(),
         #                is_symbol_show=True, is_smooth=True)
+        line.add_yaxis('m20', df['m20'].tolist(),
+                       is_symbol_show=True, is_smooth=True)
         line.add_yaxis('m30', df['m30'].tolist(),
                        is_symbol_show=False, is_smooth=True)
         line.add_yaxis('m60', df['m60'].tolist(),
