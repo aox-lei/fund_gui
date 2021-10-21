@@ -130,7 +130,7 @@ class Formula:
         Returns:
             [type]: [description]
         """
-        return format_float(unit_value * (1 + enhance_rate / 100))
+        return format_float(float(unit_value) * (1 + float(enhance_rate) / 100))
 
     @classmethod
     def hold_money(cls, unit_value, hold_share):
